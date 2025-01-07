@@ -19,11 +19,11 @@ const start = async () => {
   });
   await registerRoutes(app);
   await BuildAdminRouter(app);
-  app.listen({ port: port }, (err, addr) => {
+  app.listen({ port: port, host: "0.0.0.0" }, (err, addr) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(`Server is running at ${port}, ${Admin.options.rootPath}`);
+      console.log(`Server is running at ${addr}, ${Admin.options.rootPath}`);
     }
   });
 

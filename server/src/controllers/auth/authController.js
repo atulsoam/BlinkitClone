@@ -3,7 +3,7 @@ import { Customer, DeliveryPartner } from "../../models/index.js";
 import "dotenv/config.js";
 
 const generateToken = async (user) => {
-  const accesToken = jwt.sign(
+  const accessToken = jwt.sign(
     { userID: user._id, role: user.role },
     process.env.ACCESS_TOKEN_SECRATE,
     { expiresIn: "1d" }
@@ -14,33 +14,43 @@ const generateToken = async (user) => {
     { expiresIn: "1d" }
   );
 
-  return { accesToken, refreshToken };
+  return { accessToken, refreshToken };
 };
-
 export const loginCustomer = async (req, res) => {
   try {
     const { phone } = req.body;
     let customer = await Customer.findOne({ phone });
 
+    // If customer does not exist, create a new one
     if (!customer) {
       customer = new Customer({
         phone,
         role: "Customer",
         isActivated: true,
       });
+
       await customer.save();
     }
 
-    const { accesToken, refreshToken } = await generateToken(customer);
-    res.status(200).send({
-      message: "Login succesfully",
-      accesToken,
-      refreshToken,
-      customer,
-    });
+    // Generate tokens after ensuring customer data is valid
+    const { accessToken, refreshToken } = await generateToken(customer);
+
+    // Ensure headers are not sent multiple times
+    if (!res.headersSent) {
+      return res.status(200).send({
+        message: "Login successful",
+        accessToken,
+        refreshToken,
+        customer,
+      });
+    }
   } catch (error) {
-    console.log(`Error in loginCustomer ${error}`);
-    return res.status(405).send({ message: "Login Failed" });
+    console.log(`Error in loginCustomer: ${error.message}`);
+
+    // Ensure headers are not sent multiple times in case of an error
+    if (!res.headersSent) {
+      return res.status(500).send({ message: "Login Failed" });
+    }
   }
 };
 
@@ -56,17 +66,20 @@ export const loginDeliverPartner = async (req, res) => {
     if (!ismatch) {
       return res.status(400).send({ message: "DeliveryPartner not valid!" });
     }
-    const { accesToken, refreshToken } = await generateToken(deliveryPartner);
-    res.status(200).send({
-      message: "Login succesfully",
-      accesToken,
-      refreshToken,
-      deliveryPartner,
-      
-    });
+    const { accessToken, refreshToken } = await generateToken(deliveryPartner);
+    if (!res.headersSent) {
+      res.status(200).send({
+        message: "Login succesfully",
+        accessToken,
+        refreshToken,
+        deliveryPartner,
+      });
+    }
   } catch (error) {
     console.log(`Error in loginDeliverPartner ${error}`);
-    return res.status(405).send({ message: "Login Failed" });
+    if (!res.headersSent) {
+      return res.status(500).send({ message: "Login Failed" });
+    }
   }
 };
 
@@ -89,21 +102,24 @@ export const refresnTokenCustomerDeliveryPartner = async (req, res) => {
     if (!user) {
       return res.status(403).send({ message: "Invalid Token" });
     }
-    const { accesToken, refreshToken: newRefreshToken } = await generateToken(
+    const { accessToken, refreshToken: newRefreshToken } = await generateToken(
       user
     );
-
-    res.status(200).send({
-      message: "Token Refreshed",
-      accesToken,
-      newRefreshToken,
-      user,
-    });
+    if (!res.headersSent) {
+      res.status(200).send({
+        message: "Token Refreshed",
+        accessToken,
+        newRefreshToken,
+        user,
+      });
+    }
 
     return res.status(200).send({ message: "refresh Token Failed" });
   } catch (error) {
     console.log(`Error in refresnTokenCustomerDeliveryPartner ${error}`);
-    return res.status(405).send({ message: "refresh Token Failed" });
+    if (!res.headersSent) {
+      return res.status(405).send({ message: "refresh Token Failed" });
+    }
   }
 };
 
@@ -121,12 +137,16 @@ export const fetchUser = async (req, res) => {
     if (!user) {
       return res.status(403).send({ message: "Invalid user" });
     }
-    res.status(200).send({
-      message: "User fetched ",
-      user,
-    });
+    if (!res.headersSent) {
+      res.status(200).send({
+        message: "User fetched ",
+        user,
+      });
+    }
   } catch (error) {
     console.log(`Error in fetchUser ${error}`);
-    return res.status(500).send({ message: "An error occured" });
+    if (!res.headersSent) {
+      return res.status(500).send({ message: "An error occured" });
+    }
   }
 };
