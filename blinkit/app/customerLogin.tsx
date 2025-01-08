@@ -62,7 +62,6 @@ const customerLogin: FC = () => {
       } else {
         direction = translationY > 0 ? "down" : "up";
       }
-      console.log(translationX, translationY, direction);
 
       const newSequance = [...geasuteSequance, direction].slice(-5);
       setGeastureSequanc(newSequance);
@@ -73,7 +72,6 @@ const customerLogin: FC = () => {
     }
   };
   const handleAuth = async () => {
-    console.log("clicked");
     Keyboard.dismiss();
     setLoading(true);
     try {

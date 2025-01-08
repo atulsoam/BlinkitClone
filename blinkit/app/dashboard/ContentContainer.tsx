@@ -7,7 +7,7 @@ import { Fonts } from "@/utils/Constants";
 import CatogeryContainer from "./CatogeryContainer";
 
 const ContentContainer = () => {
-  console.log("Rendering ContentContainer", adData);
+  // console.log("Rendering ContentContainer", adData);
 
   return (
     <View style={styles.container}>

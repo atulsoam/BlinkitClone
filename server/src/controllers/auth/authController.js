@@ -16,6 +16,8 @@ const generateToken = async (user) => {
 
   return { accessToken, refreshToken };
 };
+
+
 export const loginCustomer = async (req, res) => {
   try {
     const { phone } = req.body;
@@ -68,7 +70,7 @@ export const loginDeliverPartner = async (req, res) => {
     }
     const { accessToken, refreshToken } = await generateToken(deliveryPartner);
     if (!res.headersSent) {
-      res.status(200).send({
+      return res.status(200).send({
         message: "Login succesfully",
         accessToken,
         refreshToken,
@@ -82,6 +84,7 @@ export const loginDeliverPartner = async (req, res) => {
     }
   }
 };
+
 
 export const refresnTokenCustomerDeliveryPartner = async (req, res) => {
   try {
@@ -106,7 +109,7 @@ export const refresnTokenCustomerDeliveryPartner = async (req, res) => {
       user
     );
     if (!res.headersSent) {
-      res.status(200).send({
+      return res.status(200).send({
         message: "Token Refreshed",
         accessToken,
         newRefreshToken,
@@ -127,26 +130,33 @@ export const fetchUser = async (req, res) => {
   try {
     const { userID, role } = req.user;
     let user;
+
     if (role === "Customer") {
       user = await Customer.findById(userID);
     } else if (role === "DeliveryPartner") {
       user = await DeliveryPartner.findById(userID);
     } else {
-      return res.status(403).send({ message: "Invalid Token or role" });
+      if (!res.headersSent) {
+        return res.status(403).send({ message: "Invalid Token or role" });
+      }
     }
+
     if (!user) {
-      return res.status(403).send({ message: "Invalid user" });
+      if (!res.headersSent) {
+        return res.status(403).send({ message: "Invalid user" });
+      }
     }
+
     if (!res.headersSent) {
-      res.status(200).send({
-        message: "User fetched ",
+      return res.status(200).send({
+        message: "User fetched",
         user,
       });
     }
   } catch (error) {
     console.log(`Error in fetchUser ${error}`);
     if (!res.headersSent) {
-      return res.status(500).send({ message: "An error occured" });
+      return res.status(500).send({ message: "An error occurred" });
     }
   }
 };

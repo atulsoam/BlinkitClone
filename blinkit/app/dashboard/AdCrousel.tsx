@@ -26,7 +26,7 @@ const AdCrousel: FC<{ adData: ImageSourcePropType[] }> = ({ adData }) => {
   //   );
   // }
 
-  console.log("Rendering AdCrousel with adData:", adData);
+  // console.log("Rendering AdCrousel with adData:", adData);
 
   return (
     <View style={{left:-20, marginVertical: 20 }}>

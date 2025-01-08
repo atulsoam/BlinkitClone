@@ -3,17 +3,17 @@ import { Customer, DeliveryPartner } from "../../models/index.js";
 export const updateUser = async (req, res) => {
   try {
     const { userID } = req.user;
-    console.log(userID);
-    
+
     const { updatedData } = req.body;
 
     const user =
-      await Customer.findById(userID) ||
-      await DeliveryPartner.findById(userID)
+      (await Customer.findById(userID)) ||
+      (await DeliveryPartner.findById(userID));
 
     if (!user) {
-      return res.status(405).send({ message: "User Not found" });
+      return res.status(404).send({ message: "User not found" });
     }
+
     let userModel;
 
     if (user.role === "Customer") {
@@ -21,23 +21,24 @@ export const updateUser = async (req, res) => {
     } else if (user.role === "DeliveryPartner") {
       userModel = DeliveryPartner;
     } else {
-      return res.status(405).send({ message: "User Role is not specified" });
+      return res.status(400).send({ message: "User role is not specified" });
     }
-    const userData = await userModel.findByIdAndUpdate(
+
+    const updatedUser = await userModel.findByIdAndUpdate(
       user._id,
       { $set: updatedData },
-      { $new: true, $runValidators: true }
+      { new: true, runValidators: true }
     );
 
-    if (!userData) {
-      return res.status(405).send({ message: "Update Failed" });
+    if (!updatedUser) {
+      return res.status(500).send({ message: "Failed to update user" });
     }
 
     return res
       .status(200)
-      .send({ message: "User Updated Succesfully", userData });
+      .send({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    console.log(`Error in updateUser ${error}`);
-    return res.status(405).send({ message: "Update Failed" });
+    console.error("Error updating user:", error);
+    res.status(500).send({ message: "Internal server error" });
   }
 };

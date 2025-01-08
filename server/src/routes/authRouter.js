@@ -4,8 +4,12 @@ import {
   loginDeliverPartner,
   refresnTokenCustomerDeliveryPartner,
 } from "../controllers/auth/authController.js";
-import { verifyToken } from "../middleware/AuthMiddalware.js";
+import { verifyTokenmiddleWare } from "../middleware/AuthMiddalware.js";
 import { updateUser } from "../controllers/tracking/userProfile.js";
+
+// const middleware = async (req,res)=>{
+//   const isAunthacated = verify
+// }
 
 export const authRoutes = (fastify, options, done) => {
   fastify.post("/customer/login", loginCustomer);
@@ -14,7 +18,7 @@ export const authRoutes = (fastify, options, done) => {
     "/refreshToken",
     refresnTokenCustomerDeliveryPartner
   );
-  fastify.get("/fetchuser", { preHandler: [verifyToken] }, fetchUser);
-  fastify.patch("/updateUser", { preHandler: [verifyToken] }, updateUser);
+  fastify.get("/fetchuser", { preHandler: [verifyTokenmiddleWare] }, fetchUser);
+  fastify.patch("/updateUser", { preHandler: [verifyTokenmiddleWare] }, updateUser);
   done();
 };

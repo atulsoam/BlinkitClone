@@ -12,7 +12,7 @@ const OrderSuccessScreen: FC = () => {
   const router =  useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log("Moving to live tracking screen");
+      // console.log("Moving to live tracking screen");
       router.push("/map/LiveTracking")
     }, 2300);
     return () => clearTimeout(timeout);

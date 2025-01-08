@@ -9,6 +9,7 @@ import {
 } from "@/services/ProductService";
 import ProductList from "./category/ProductList";
 import withCart from "./cart/WithCart";
+import withLiveStatus from "./map/WithLiveStatus";
 // import { categories } from '../utils/dummyData';
 
 const ProductCategories: FC = () => {
@@ -96,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withCart(ProductCategories);
+export default withLiveStatus(withCart(ProductCategories));

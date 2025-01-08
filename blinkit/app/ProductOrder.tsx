@@ -58,7 +58,7 @@ const ProductOrder: FC = () => {
     if (data != null) {
       setCurrentOrder(data);
       clearCart();
-      console.log("navigate to succes order");
+      // console.log("navigate to succes order");
       router.push("/order/OrderSuccessScreen");
     } else {
       Alert.alert("Add items to cart to place order.");

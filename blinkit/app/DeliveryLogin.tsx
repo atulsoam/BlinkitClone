@@ -11,9 +11,12 @@ import CustomInput from "@/components/ui/CustomInput";
 import { Ionicons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import CustomButton from "@/components/ui/CustomButton";
+import { useAuthStore } from "@/state/authStore";
 
 const DeliveryLogin: FC = () => {
   const router = useRouter();
+    const setUser = useAuthStore((state) => state.setUser);
+  
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +24,7 @@ const DeliveryLogin: FC = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await DeliveryPartnerLogin(email, password);
+      await DeliveryPartnerLogin(email, password,setUser);
       router.push("/DeliverDashboard");
     } catch (error) {
       console.log(error, "handle deliveryLogin");

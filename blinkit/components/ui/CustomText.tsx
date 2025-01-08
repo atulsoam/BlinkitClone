@@ -31,7 +31,7 @@ const CustomText: FC<Props> = ({
   onLayout,
   ...props
 }) => {
-  let computedFontSize: number = 0;
+  let computedFontSize: number = RFValue(fontSize || 12);
   switch (variant) {
     case "h1":
       computedFontSize = RFValue(fontSize || 22);

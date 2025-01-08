@@ -9,21 +9,25 @@ import React, { FC, useEffect, useState } from "react";
 import CustomText from "../ui/CustomText";
 import { Fonts } from "@/utils/Constants";
 import { RFValue } from "react-native-responsive-fontsize";
-import { getUserData } from "../../state/authStore";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useAuthStore } from "@/state/authStore";
+import * as Location from "expo-location";
+import { reverseGeocode } from "@/services/mapService";
 
 const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
-  const [userData, setUserData] = useState<any>(null);
-  console.log(userData);
-  
+  const { user, setUser } = useAuthStore();
+  const updateUSerLocatio = async () => {
+    Location.requestForegroundPermissionsAsync()
+    const position = await Location.getCurrentPositionAsync();
+    const { latitude, longitude } = position.coords;
+    reverseGeocode(latitude, longitude, setUser);
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await getUserData();
-      setUserData(data);
-    };
-    fetchUserData();
+    updateUSerLocatio();
   }, []);
+  const router = useRouter();
   return (
     <View style={styles.subContainer}>
       <TouchableOpacity activeOpacity={0.8}>
@@ -57,7 +61,7 @@ const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
             fontFamily={Fonts.Medium}
             style={styles.text2}
           >
-            {userData?.address || "Knowwhere, SomeWhere Street"}
+            {user?.address || "Knowwhere, SomeWhere Street"}
           </CustomText>
           <Ionicons
             name="arrow-down"
@@ -67,7 +71,11 @@ const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
           />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          router.push("/profile/Profile");
+        }}
+      >
         <Ionicons
           name="person-circle-outline"
           size={RFValue(36)}

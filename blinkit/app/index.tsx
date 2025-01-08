@@ -35,12 +35,12 @@ const configureLocation = async (): Promise<void> => {
   }
 
   // Request background location permissions
-  const { status: bgStatus } =
-    await Location.requestBackgroundPermissionsAsync();
-  if (bgStatus !== "granted") {
-    console.log("Background location permission denied");
-    return;
-  }
+  // const { status: bgStatus } =
+  //   await Location.requestBackgroundPermissionsAsync();
+  // if (bgStatus !== "granted") {
+  //   console.log("Background location permission denied");
+  //   return;
+  // }
 
   // Configure precise location updates (foreground and background)
   const taskName: string = "yourTaskName"; // You can specify a task name here for background updates
@@ -50,30 +50,30 @@ const configureLocation = async (): Promise<void> => {
     distanceInterval: 0, // Distance interval in meters
   };
 
-  try {
-    // Start location updates in the background
-    await Location.startLocationUpdatesAsync(taskName, options);
-    console.log("Location updates started");
-  } catch (error) {
-    console.error("Error starting location updates", error);
-  }
+  // try {
+  //   // Start location updates in the background
+  //   await Location.startLocationUpdatesAsync(taskName, options);
+  //   console.log("Location updates started");
+  // } catch (error) {
+  //   console.error("Error starting location updates", error);
+  // }
 };
 // SplashScreens.preventAutoHideAsync();
 
 const SplashScreen = () => {
   const { user, setUser } = useAuthStore();
-  console.log(user, 65);
+  // console.log(user, 65);
   const token = async () => {
     const accessToken = await tokenStorage.getItem("accessToken"); // Replace with your actual access token
     const refreshToken = await tokenStorage.getItem("refreshToken");
-    console.log(accessToken);
-    console.log(refreshToken, 138);
+    // console.log(accessToken);
+    // console.log(refreshToken, 138);
     // await tokenStorage.removeItem("accessToken");
     // await tokenStorage.removeItem("refreshToken");
 
     // setUser(null)
   };
-  token();
+  // token();
 
   const [loaded, error] = useFonts({
     "Okra-Regular": require("../assets/fonts/Okra-Regular.ttf"),
@@ -116,26 +116,15 @@ const SplashScreen = () => {
     if (status === "granted") {
       console.log("Location granted, starting updates...");
       configureLocation(); // Start the location updates if permission granted
-      logLocation();
       // Save the tokens and navigate to the CustomerLogin page
       await saveTokensAndRedirect();
     } else {
       console.log("Permission denied, guide user to settings");
       // Optionally guide the user to the app settings to enable location permissions manually
-      Linking.openURL("app-settings:"); // Opens the app settings screen
+      // Linking.openURL("app-settings:"); // Opens the app settings screen
     }
   };
-  const logLocation = async () => {
-    try {
-      const { coords } = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
-      console.log("Latitude: ", coords.latitude);
-      console.log("Longitude: ", coords.longitude);
-    } catch (error) {
-      console.error("Error getting location: ", error);
-    }
-  };
+  
   interface DecodeToken {
     exp: number;
   }
@@ -145,8 +134,8 @@ const SplashScreen = () => {
     try {
       const accessToken = await tokenStorage.getItem("accessToken"); // Replace with your actual access token
       const refreshToken = await tokenStorage.getItem("refreshToken");
-      console.log(accessToken);
-      console.log(refreshToken, 138);
+      // console.log(accessToken);
+      // console.log(refreshToken, 138);
 
       // Save tokens securely using functions from storage.ts
       if (accessToken && refreshToken) {
@@ -172,7 +161,7 @@ const SplashScreen = () => {
         if (user?.role === "Customer") {
           router.push("/ProductDashboard");
         } else {
-          router.push("/customerLogin");
+          router.push("/DeliverDashboard");
         }
       } else {
         router.push("/customerLogin"); // Navigate to the CustomerLogin screen using Expo Router

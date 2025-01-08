@@ -11,4 +11,5 @@ export const categoryRoutes = (fastify, options, done) => {
   fastify.get("/getAllCatagories", getAllCatagories);
 
   done();
+  
 };

@@ -8,14 +8,17 @@ import { tokenStorage } from "@/state/storageMMkv";
 import { useAuthStore } from "@/state/authStore";
 // console.log(BASE_URL);
 
-export const CustomerLogin = async (phone: string,setUser: (user: any) => void) => {
+export const CustomerLogin = async (
+  phone: string,
+  setUser: (user: any) => void
+) => {
   // const { setUser } = useAuthStore();
   try {
     const response = await axios.post(`${BASE_URL}/customer/login`, { phone });
     const { accessToken, refreshToken, customer } = await response.data;
-    console.log(customer, "customer");
-    console.log(accessToken, "acces");
-    console.log(refreshToken, "refresh");
+    // console.log(customer, "customer");
+    // console.log(accessToken, "acces");
+    // console.log(refreshToken, "refresh");
     tokenStorage.setItem("accessToken", accessToken);
     tokenStorage.setItem("refreshToken", refreshToken);
     setUser(customer);
@@ -24,15 +27,17 @@ export const CustomerLogin = async (phone: string,setUser: (user: any) => void) 
   }
 };
 
-export const DeliveryPartnerLogin = async (email: string, password: string) => {
-  const { user, setUser } = useAuthStore();
-
+export const DeliveryPartnerLogin = async (
+  email: string,
+  password: string,
+  setUser: (user: any) => void
+) => {
   try {
     const response = await axios.post(`${BASE_URL}/deliveryPartner/login`, {
       email,
       password,
     });
-    console.log(response.data);
+    // console.log(response.data);
 
     const { accessToken, refreshToken, deliveryPartner } = await response.data;
 
@@ -53,8 +58,8 @@ export const RefreshToken = async () => {
       AlreadyStoredRefreshToken,
     });
     const { accesToken, newRefreshToken } = await response.data;
-    console.log(accesToken, "acces");
-    console.log(newRefreshToken, "refresh");
+    // console.log(accesToken, "acces");
+    // console.log(newRefreshToken, "refresh");
     tokenStorage.setItem("accessToken", accesToken);
     tokenStorage.setItem("refreshToken", newRefreshToken);
     return accesToken;
@@ -71,5 +76,20 @@ export const RefetchUser = async () => {
     setUser(response.data.user);
   } catch (error) {
     console.log(error, "authServices");
+  }
+};
+
+export const updateUserLocation = async (liveLocation: any) => {
+  // console.log(liveLocation,83);
+
+  try {
+    const response = await appAxios.patch(`/updateUser`, {
+      updatedData: liveLocation,
+    });
+    // console.log(response.data,87);
+
+    RefetchUser();
+  } catch (error) {
+    console.log(error, "updateUserLocation");
   }
 };

@@ -31,6 +31,7 @@ import Animated, {
 import { Ionicons } from "@expo/vector-icons";
 import withCart from "./cart/WithCart";
 import { useAuthStore } from "@/state/authStore";
+import withLiveStatus from "./map/WithLiveStatus";
 // import {fonts as Fonts} from "../assets/fonts/"
 const NOTICE_HEIGHT = -(NoticeHeight + 12);
 
@@ -177,5 +178,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withCart(withCollapsibleContext(ProductDashboard));
+export default withLiveStatus( withCart(withCollapsibleContext(ProductDashboard)));
 // export default ProductDashboard;

@@ -10,6 +10,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "@/components/ui/CustomText";
 import DeliveryAndDetails from "./DeliveryAndDetails";
 import OrderSummary from "./OrderSummary";
+import withLiveStatus from "./WithLiveStatus";
 
 const LiveTracking: FC = () => {
   const { currentOrder, setCurrentOrder } = useAuthStore();
@@ -42,7 +43,13 @@ const LiveTracking: FC = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollcontainer}
       >
-        <LiveMap />
+        <LiveMap
+          deliveryPersonLocation={currentOrder?.deliveryPersonLocation}
+          deliveryLocation={currentOrder?.deliveryLocation || null}
+          hasAccepted={currentOrder?.status == "confirmed"}
+          hasPickedUp={currentOrder?.status == "arriving"}
+          pickupLocation={currentOrder?.pickupLocation || null}
+        />
         <View style={styles.flexRow}>
           <View style={styles.iconContainer}>
             <Ionicons
@@ -132,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LiveTracking;
+export default withLiveStatus(LiveTracking);

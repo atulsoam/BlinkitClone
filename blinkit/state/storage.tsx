@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 export const saveAccessToken = async (token: string) => {
   try {
     await SecureStore.setItemAsync("access_token", token);
-    console.log("Access token saved successfully");
+    // console.log("Access token saved successfully");
   } catch (error) {
     console.error("Error saving access token", error);
   }

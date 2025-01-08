@@ -27,3 +27,61 @@ export const getOrderByID = async (id: AndroidLayerType) => {
     return null;
   }
 };
+export const getAllOrders = async (id: any) => {
+  //   const { user, setUser } = useAuthStore();
+
+  try {
+    const response = await appAxios.post(`/getAllOrder`, {
+      customerId: id,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error, "getOrderByID");
+    return null;
+  }
+};
+export const fetchOrder = async (selectedTab: any, id: any, branch: any) => {
+  //   const { user, setUser } = useAuthStore();
+  let query =
+    selectedTab == "available"
+      ? { status: selectedTab, branchId: branch }
+      : {  branchId: branch, deliveryPartnerId: id };
+  try {
+    const response = await appAxios.post(`/getAllOrder`, query);
+    return response.data;
+  } catch (error) {
+    console.log(error, "fetchOrder");
+    return null;
+  }
+};
+
+export const sendLiveOrderUpdates = async (
+  location: any,
+  id: string,
+  status: any
+) => {
+  //   const { user, setUser } = useAuthStore();
+  try {
+    const response = await appAxios.patch(`/updateOrder/${id}`, {
+      status: status,
+      deliveryPersonLocation: location,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error, "fetchOrder");
+    return null;
+  }
+};
+
+export const confirmOrder = async (location: any, id: string) => {
+  //   const { user, setUser } = useAuthStore();
+  try {
+    const response = await appAxios.post(`/confirm/${id}`, {
+      deliveryPersonLocation: location,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error, "confirmOrder");
+    return null;
+  }
+};

@@ -95,13 +95,15 @@ export const confirmOrder = async (req, res) => {
     const { orderId } = req.params;
     const { userID } = req.user;
     const { deliveryPersonLocation } = req.body;
+    console.log(userID);
+    console.log(deliveryPersonLocation);
+    console.log(orderId);
 
     const deliverpersonData = await DeliveryPartner.findById(userID);
 
     if (!deliverpersonData) {
       return res.status(405).send({ message: "delivery person not found" });
     }
-
     const orderData = await Order.findById(orderId);
 
     if (!orderData) {
@@ -119,7 +121,6 @@ export const confirmOrder = async (req, res) => {
       address: deliveryPersonLocation.address || "No Address found",
       longitude: deliveryPersonLocation.longitude,
     };
-
     req.server.io.to(orderId).emit("orderConfirmed", orderData);
     await orderData.save();
     return res.status(200).send(orderData);

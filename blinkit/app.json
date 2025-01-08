@@ -9,13 +9,27 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDErj9crYvl3jeZ2sXQ5rVMSkSyklc6eh0"
+      },
+      "bundleIdentifier": "com.atulsoam.blinkit"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDErj9crYvl3jeZ2sXQ5rVMSkSyklc6eh0"
+        }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.atulsoam.blinkit"
     },
     "web": {
       "bundler": "metro",
@@ -38,13 +52,21 @@
         {
           "locationAccuracy": "high",
           "backgroundLocationUpdates": true,
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow App to use your location."
         }
       ],
       "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "89c2d20b-b656-4a07-9c71-bc501b13e960"
+      }
     }
   }
 }
