@@ -26,54 +26,18 @@ import { useAuthStore } from "@/state/authStore";
 import { tokenStorage } from "@/state/storageMMkv";
 
 // Function to request location permissions and start location updates
-const configureLocation = async (): Promise<void> => {
-  // Request foreground permission for precise location
-  const { status } = await Location.requestForegroundPermissionsAsync();
-  if (status !== "granted") {
-    console.log("Permission to access location was denied");
-    return;
-  }
-
-  // Request background location permissions
-  // const { status: bgStatus } =
-  //   await Location.requestBackgroundPermissionsAsync();
-  // if (bgStatus !== "granted") {
-  //   console.log("Background location permission denied");
-  //   return;
-  // }
-
-  // Configure precise location updates (foreground and background)
-  const taskName: string = "yourTaskName"; // You can specify a task name here for background updates
-  const options: Location.LocationOptions = {
-    accuracy: Location.Accuracy.High, // Precise location
-    timeInterval: 10000, // Time interval in milliseconds
-    distanceInterval: 0, // Distance interval in meters
-  };
-
-  // try {
-  //   // Start location updates in the background
-  //   await Location.startLocationUpdatesAsync(taskName, options);
-  //   console.log("Location updates started");
-  // } catch (error) {
-  //   console.error("Error starting location updates", error);
-  // }
-};
-// SplashScreens.preventAutoHideAsync();
+// const configureLocation = async (): Promise<void> => {
+//   // Request foreground permission for precise location
+//   const { status } = await Location.requestForegroundPermissionsAsync();
+//   if (status !== "granted") {
+//     console.log("Permission to access location was denied");
+//     return;
+//   }
+// };
 
 const SplashScreen = () => {
   const { user, setUser } = useAuthStore();
   // console.log(user, 65);
-  const token = async () => {
-    const accessToken = await tokenStorage.getItem("accessToken"); // Replace with your actual access token
-    const refreshToken = await tokenStorage.getItem("refreshToken");
-    // console.log(accessToken);
-    // console.log(refreshToken, 138);
-    // await tokenStorage.removeItem("accessToken");
-    // await tokenStorage.removeItem("refreshToken");
-
-    // setUser(null)
-  };
-  // token();
 
   const [loaded, error] = useFonts({
     "Okra-Regular": require("../assets/fonts/Okra-Regular.ttf"),
@@ -82,31 +46,11 @@ const SplashScreen = () => {
     "Okra-Bold": require("../assets/fonts/Okra-Bold.ttf"),
     "Okra-ExtraBold": require("../assets/fonts/Okra-ExtraBold.ttf"),
   });
-  // useEffect(() => {
-  //   if (loaded || error) {
-  //     SplashScreens.hideAsync();
-  //   }
-  // }, [loaded, error]);
-
-  // if (!loaded && !error) {
-  //   return null;
-  // }
 
   const [locationPermission, setLocationPermission] = useState<
     "granted" | "denied" | "undetermined"
   >("undetermined");
   const router = useRouter(); // Use Expo Router
-
-  // Check location permission status on mount
-  useEffect(() => {
-    const checkPermission = async () => {
-      const { status } = await Location.getForegroundPermissionsAsync();
-      setLocationPermission(status); // Update state with the current permission status
-    };
-
-    const timeout = setTimeout(checkPermission, 5000);
-    return () => clearTimeout(timeout);
-  }, []);
 
   // Handle the button click to request location permission
   const handleRequestLocationPermission = async () => {
@@ -114,8 +58,8 @@ const SplashScreen = () => {
     setLocationPermission(status); // Update the state based on the new status
 
     if (status === "granted") {
-      console.log("Location granted, starting updates...");
-      configureLocation(); // Start the location updates if permission granted
+      // console.log("Location granted, starting updates...");
+      // configureLocation(); // Start the location updates if permission granted
       // Save the tokens and navigate to the CustomerLogin page
       await saveTokensAndRedirect();
     } else {
@@ -124,7 +68,7 @@ const SplashScreen = () => {
       // Linking.openURL("app-settings:"); // Opens the app settings screen
     }
   };
-  
+
   interface DecodeToken {
     exp: number;
   }
@@ -181,7 +125,7 @@ const SplashScreen = () => {
       }
     };
 
-    const timeout = setTimeout(fetchuserLocation, 100);
+    const timeout = setTimeout(fetchuserLocation, 2000);
     return () => clearTimeout(timeout);
   }, [locationPermission]);
 

@@ -27,12 +27,22 @@ import { Fonts } from "@/utils/Constants";
 import Animated, {
   useAnimatedStyle,
   withTiming,
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import withCart from "./cart/WithCart";
 import { useAuthStore } from "@/state/authStore";
 import withLiveStatus from "./map/WithLiveStatus";
 // import {fonts as Fonts} from "../assets/fonts/"
+
+
+
+// This is the default configuration
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+});
 const NOTICE_HEIGHT = -(NoticeHeight + 12);
 
 const ProductDashboard: FC = () => {

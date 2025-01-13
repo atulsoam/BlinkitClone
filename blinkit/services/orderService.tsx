@@ -75,6 +75,8 @@ export const sendLiveOrderUpdates = async (
 
 export const confirmOrder = async (location: any, id: string) => {
   //   const { user, setUser } = useAuthStore();
+  console.log(location,"in confrmorder");
+  
   try {
     const response = await appAxios.post(`/confirm/${id}`, {
       deliveryPersonLocation: location,

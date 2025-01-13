@@ -1,14 +1,12 @@
 import { hocStyles } from "@/components/global/GlobelStyles";
 import CustomText from "@/components/ui/CustomText";
-import { SOCKETURL } from "@/services/config";
-import { getOrderByID } from "@/services/orderService";
+import { getSocketInstance } from "@/services/socket";
 import { useAuthStore } from "@/state/authStore";
 import { Colors, Fonts } from "@/utils/Constants";
 import { useNavigationState } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import io from "socket.io-client";
 
 const withLiveStatus = <P extends object>(
   WrappedComponent: React.ComponentType<P>
@@ -19,40 +17,40 @@ const withLiveStatus = <P extends object>(
     const routeName = useNavigationState(
       (state) => state.routes[state.index]?.name
     );
-    // console.log(routeName, 20);
 
-    const fetchOrderDeails = async () => {
-      const data = await getOrderByID(currentOrder?._id as any);
-      setCurrentOrder(data);
-    };
+    const socket = getSocketInstance(); // Get the singleton socket instance
 
     useEffect(() => {
       if (currentOrder) {
-        const socketInstance = io(SOCKETURL, {
-          transports: ["websocket"],
-          withCredentials: false,
+        socket.emit("joinRoom", currentOrder._id); // Join the room only once
+
+        // Event listeners to handle updates
+        socket.on("liveTrackingUpdates", (updatedOrder: any) => {
+          setCurrentOrder(updatedOrder); // Update the order state with live tracking updates
         });
 
-        socketInstance.emit("joinRoom", currentOrder?._id);
-        socketInstance.on("liveTrackingUpdates", (updatedOrder) => {
-          fetchOrderDeails();
-          // console.log("Receiving live updates");
-        });
-        socketInstance.on("orderConfirmed", (confirmOrder) => {
-          fetchOrderDeails();
-          // console.log("Receiving orderConfirmed updates");
+        socket.on("orderConfirmed", (confirmOrder: any) => {
+          setCurrentOrder(confirmOrder); // Handle order confirmation
         });
 
+        socket.on("orderUpdates", (updatedOrder: any) => {
+          setCurrentOrder(updatedOrder); // Handle order updates
+        });
+
+        // Cleanup listeners when the component unmounts or when currentOrder changes
         return () => {
-          socketInstance.disconnect();
+          socket.off("liveTrackingUpdates");
+          socket.off("orderConfirmed");
+          socket.off("orderUpdates");
+          socket.off("joinRoom");
         };
       }
-    }, [currentOrder]);
+    }, [currentOrder, socket]); // Only re-run when currentOrder changes
 
     return (
       <View style={styles.container}>
         <WrappedComponent {...props} />
-        {currentOrder && routeName != "map/LiveTracking" && (
+        {currentOrder && routeName !== "map/LiveTracking" && (
           <View
             style={[
               hocStyles.cartContainer,
@@ -71,7 +69,7 @@ const withLiveStatus = <P extends object>(
                   Order is {currentOrder?.status}
                 </CustomText>
                 <CustomText variant="h9" fontFamily={Fonts.Medium}>
-                  {currentOrder?.items![0]?.item.name +
+                  {currentOrder?.items[0]?.item.name +
                     (currentOrder?.items?.length - 1 > 0
                       ? `and ${currentOrder?.items?.length - 1} + items`
                       : "")}
@@ -97,6 +95,7 @@ const withLiveStatus = <P extends object>(
       </View>
     );
   };
+
   return WithLiveStatusComponent;
 };
 

@@ -1,85 +1,68 @@
 {
     "__v": 0,
-    "_id": "677e4b731cfbcbb30e38c4d8",
+    "_id": "678502d0356ea4bb5c3cabf1",
     "branch": {
-        "DeliveryPartners": [],
+        "DeliveryPartners": [
+            {
+                "attributename": true
+            },
+            {
+                "attributename": true
+            },
+            {
+                "attributename": true
+            },
+            {
+                "attributename": true
+            },
+            {
+                "attributename": false
+            }
+        ],
         "__v": 0,
         "_id": "676d750bc2f6fd6e7497b16a",
-        "address": "Meerut",
+        "address": "Chuur",
         "liveLocation": {
-            "latitude": 28.973947,
-            "longitude": 77.693446
+            "latitude": 29.181367,
+            "longitude": 77.545737
         },
         "name": "FirstBranch"
     },
-    "createdAt": "2025-01-08T09:54:59.517Z",
+    "createdAt": "2025-01-13T12:10:56.719Z",
     "customer": {
         "__v": 0,
         "_id": "6776a828a9f376a00dc4532a",
-        "address": "5HR8+P5R, Uttar Pradesh 250342, India",
+        "address": "5HV7+6M7, Uttar Pradesh 250342, India",
         "isActivated": true,
         "liveLocation": {
-            "latitude": 29.1918517,
-            "longitude": 77.565395
+            "latitude": 29.193320929801583,
+            "longitude": 77.56395273157452
         },
         "name": "Atul Admin",
         "phone": 6398914011,
         "role": "Customer"
     },
     "deliveryLocation": {
-        "address": "5HR8+P5R, Uttar Pradesh 250342, India",
-        "latitude": 29.1918517,
-        "longitude": 77.565395
-    },
-    "deliveryPartner": {
-        "__v": 0,
-        "_id": "676d459a2e68774b3041b22e",
         "address": "5HV7+6M7, Uttar Pradesh 250342, India",
-        "email": "a@gmail.com",
-        "isActivated": true,
-        "liveLocation": {
-            "latitude": 29.19333994394138,
-            "longitude": 77.56393723798323
-        },
-        "name": "Atul Soam",
-        "password": "1234",
-        "phone": 12121212,
-        "role": "DeliveryPartner"
-    },
-    "deliveryPersonLocation": {
-        "latitude": 29.193333844566453,
-        "longitude": 77.56392759558715
+        "latitude": 29.193320929801583,
+        "longitude": 77.56395273157452
     },
     "items": [
         {
-            "_id": "677e4b731cfbcbb30e38c4d9",
-            "count": 1,
-            "id": "676d2cdd6c29f34ea2db0f0b",
-            "item": [Object
-            ]
-        },
-        {
-            "_id": "677e4b731cfbcbb30e38c4da",
-            "count": 1,
-            "id": "676d2cdd6c29f34ea2db0f0c",
-            "item": [Object
-            ]
-        },
-        {
-            "_id": "677e4b731cfbcbb30e38c4db",
+            "_id": "678502d0356ea4bb5c3cabf2",
             "count": 1,
             "id": "676d2cdd6c29f34ea2db0f0d",
             "item": [Object
             ]
         }
     ],
-    "orderId": "ORDR00015",
+    "orderId": "ORDR00002",
     "pickupLocation": {
-        "address": "Meerut",
-        "latitude": 28.973947,
-        "longitude": 77.693446
+        "address": "Chuur",
+        "latitude": 29.181367,
+        "longitude": 77.545737
     },
-    "status": "confirmed",
-    "totalPrice": 181,
-    "updatedAt": "2025-01-08T10:02:37.552Z"
+    "status": "available",
+    "totalPrice": 58,
+    "updatedAt": "2025-01-13T12:10:56.719Z"
 }

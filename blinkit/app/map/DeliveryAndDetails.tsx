@@ -6,6 +6,8 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "@/components/ui/CustomText";
 
 const DeliveryAndDetails: FC<{ details: any }> = ({ details }) => {
+  // console.log(details,"deliverydetails");
+  
   return (
     <View style={styles.container}>
       <View style={styles.flexRow}>

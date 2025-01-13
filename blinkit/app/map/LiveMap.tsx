@@ -7,6 +7,7 @@ import MapViewComponent from "@/components/map/MapViewComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { handleFitToPath } from "@/components/map/mapUtils";
+import * as Location from "expo-location";
 
 interface Livemaprpops {
   deliveryPersonLocation: any;
@@ -25,6 +26,13 @@ const LiveMap: FC<Livemaprpops> = ({
 }) => {
   const { mapRef, setMapRef } = useMapRefStore();
 
+  // const requestLocation  =async()=>{
+  // const status = Location.requestForegroundPermissionsAsync().then((status) => {
+  //   console.log(status, "in location acees required");
+  // });
+
+  // }
+
   useEffect(() => {
     if (mapRef) {
       handleFitToPath(
@@ -36,30 +44,39 @@ const LiveMap: FC<Livemaprpops> = ({
         hasAccepted
       );
     }
-  }, [mapRef, deliveryLocation, hasAccepted, hasPickedUp,deliveryPersonLocation]);
+  }, [
+    mapRef,
+    deliveryLocation,
+    hasAccepted,
+    hasPickedUp,
+    deliveryPersonLocation,
+  ]);
   return (
     <View style={styles.container}>
-      <MapViewComponent
-        hasAccepted={hasAccepted}
-        hasPickedup={hasPickedUp}
-        deliverPersonLocation={deliveryPersonLocation}
-        deliveryLocation={deliveryLocation}
-        pickupLocation={pickupLocation}
-        mapRef={mapRef}
-        setMapRef={setMapRef}
-        // camera={""}
-      />
-      <TouchableOpacity style={styles.fitButton}
-      onPress={()=>{
-        handleFitToPath(
-          mapRef,
-          deliveryPersonLocation,
-          pickupLocation,
-          deliveryLocation,
-          hasPickedUp,
-          hasAccepted
-        );
-      }}
+      {deliveryLocation && pickupLocation  && (
+        <MapViewComponent
+          hasAccepted={hasAccepted}
+          hasPickedup={hasPickedUp}
+          deliverPersonLocation={deliveryPersonLocation}
+          deliveryLocation={deliveryLocation}
+          pickupLocation={pickupLocation}
+          mapRef={mapRef}
+          setMapRef={setMapRef}
+          // camera={""}
+        />
+      )}
+      <TouchableOpacity
+        style={styles.fitButton}
+        onPress={() => {
+          handleFitToPath(
+            mapRef,
+            deliveryPersonLocation,
+            pickupLocation,
+            deliveryLocation,
+            hasPickedUp,
+            hasAccepted
+          );
+        }}
       >
         <Ionicons
           name="locate-outline"
@@ -73,7 +90,7 @@ const LiveMap: FC<Livemaprpops> = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: screenHeight * 0.35,
+    height: screenHeight * 0.4,
     width: "100%",
     borderRadius: 15,
     backgroundColor: "#fff",

@@ -45,7 +45,7 @@ const withLiveStatus = <P extends object>(
         const watchID = Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            distanceInterval: 2,
+            distanceInterval: 10,
           },
           async (position) => {
             const { latitude, longitude } = position.coords;

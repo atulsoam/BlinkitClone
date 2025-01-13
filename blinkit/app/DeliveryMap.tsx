@@ -1,17 +1,8 @@
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/state/authStore";
-import {
-  confirmOrder,
-  getOrderByID,
-  sendLiveOrderUpdates,
-} from "@/services/orderService";
+import { confirmOrder, sendLiveOrderUpdates } from "@/services/orderService";
 import { Colors, Fonts } from "@/utils/Constants";
-
-import { Ionicons } from "@expo/vector-icons";
-import { RFValue } from "react-native-responsive-fontsize";
-import CustomText from "@/components/ui/CustomText";
-
 import { useSearchParams } from "expo-router/build/hooks";
 import * as Location from "expo-location";
 import LiveHeader from "./map/LiveHeader";
@@ -20,6 +11,15 @@ import DeliveryAndDetails from "./map/DeliveryAndDetails";
 import OrderSummary from "./map/OrderSummary";
 import { hocStyles } from "@/components/global/GlobelStyles";
 import CustomButton from "@/components/ui/CustomButton";
+import io from "socket.io-client";
+import { SOCKETURL } from "@/services/config";
+import CustomText from "@/components/ui/CustomText";
+
+// Socket Singleton to avoid multiple instances
+let socketInstance = io(SOCKETURL, {
+  transports: ["websocket"],
+  withCredentials: false,
+});
 
 const DeliveryMap: FC = () => {
   const user = useAuthStore((state) => state.user);
@@ -27,136 +27,141 @@ const DeliveryMap: FC = () => {
   const [mylocation, setMylocation] = useState<any>(null);
   const searchParams = useSearchParams();
   const item = searchParams.get("item");
-  console.log(item,30);
-  
   const parsedItem = item ? JSON.parse(item) : null;
-
   const { setCurrentOrder } = useAuthStore();
 
-  const fetchOrderDetails = async () => {
-    const data = await getOrderByID(parsedItem?._id as any);
-    setOrderData(data);
-  };
-  useEffect(() => {
-    fetchOrderDetails();
-  }, []);
-  const configureLocation = async (): Promise<void> => {
-    // Request foreground permission for precise location
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-      return;
-    }
-  };
+  const fetchOrderDetails = useCallback(async () => {
+    console.log("data requested socket");
+    socketInstance.emit("needOrderData", parsedItem?._id);
+  }, [parsedItem?._id]);
 
   useEffect(() => {
-    configureLocation();
+    socketInstance.emit("joinRoom", parsedItem?._id);
+    fetchOrderDetails();
+    return () => {
+      socketInstance.off("joinRoom");
+      socketInstance.off("needOrderData");
+    };
+  }, [parsedItem?._id, fetchOrderDetails]);
+
+  useEffect(() => {
+    socketInstance.on("orderUpdates", (updatedOrder) => {
+      console.log("data received from socket");
+      setOrderData(updatedOrder);
+    });
+
+    return () => {
+      socketInstance.off("orderUpdates");
+    };
+  }, [mylocation]);
+
+  useEffect(() => {
     const watchID = Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
-        timeInterval: 1000,
-        distanceInterval: 1,
+        timeInterval: 5000,
+        distanceInterval: 50,
       },
-      async (position) => {
+      (position) => {
         const { latitude, longitude } = position.coords;
+        console.log(latitude, 67);
 
-        setMylocation({ latitude, longitude });
+        // Avoid triggering unnecessary updates
+        if (
+          mylocation &&
+          (mylocation.latitude !== latitude ||
+            mylocation.longitude !== longitude)
+        ) {
+          setMylocation({ latitude, longitude });
+          syncLocation(latitude, longitude);
+        }
+        if (!mylocation){
+          setMylocation({ latitude, longitude });
+
+        }
       }
     );
-    // return()=>watchID.remove();
-  }, [mylocation]);
+    return () => {
+      watchID.then((subscription) => subscription.remove());
+    };
+  }, [mylocation, orderData]);
 
-  let message = "Start this order";
-  if (
-    orderData?.deliveryPartner?._id == user?._id &&
-    orderData?.status === "confirmed"
-  ) {
-    message = "Grab your order";
-  } else if (
-    orderData?.deliveryPartner?._id == user?._id &&
-    orderData?.status === "arriving"
-  ) {
-    message = "Complete your order";
-  } else if (
-    orderData?.deliveryPartner?._id == user?._id &&
-    orderData?.status === "delivered"
-  ) {
-    message = "Your milestone";
-  } else if (
-    orderData?.deliveryPartner?._id != user?._id &&
-    orderData?.status === "available"
-  ) {
-    message = "You Missed it";
-  }
-
-  useEffect(() => {
-    async function sendLiveUpdates() {
-      if (
-        orderData?.deliveryPartner?._id == user?._id &&
-        orderData?.status != "delivered" &&
-        orderData?.status != "cancelled"
-      ) {
-        await sendLiveOrderUpdates(
-          mylocation,
-          orderData?._id,
-          orderData?.status
-        );
-        fetchOrderDetails();
-      }
+  const syncLocation = async (latitude: number, longitude: number) => {
+    if (orderData && orderData?.deliveryPartner) {
+      socketInstance.emit("updateLocation", {
+        location: { latitude, longitude },
+        orderId: orderData._id,
+        userID: user?._id,
+      });
     }
-    sendLiveUpdates()
-  }, [mylocation]);
+  };
 
   const acceptOrder = async () => {
-    console.log("clicked accept order", orderData?._id);
-
     const data = await confirmOrder(mylocation, orderData?._id);
     if (data) {
       setCurrentOrder(data);
       Alert.alert("Order Accepted, Grab your package");
+      fetchOrderDetails();
     } else {
       Alert.alert("There was an error");
     }
-    fetchOrderDetails();
   };
+
   const orderPickedUp = async () => {
     const data = await sendLiveOrderUpdates(
       mylocation,
-
       orderData?._id,
       "arriving"
     );
     if (data) {
       setCurrentOrder(data);
-      //   Alert.alert("Order Accepted, Grab your package");
+      Alert.alert("Order Picked Up, Deliver as soon as possible");
+      fetchOrderDetails();
     } else {
       Alert.alert("There was an error");
     }
-    fetchOrderDetails();
   };
 
   const DeliverOrder = async () => {
     const data = await sendLiveOrderUpdates(
       mylocation,
-
       orderData?._id,
       "delivered"
     );
     if (data) {
       setCurrentOrder(data);
-      //   Alert.alert("Order Accepted, Grab your package");
+      Alert.alert("Order Delivered, Thank you");
+      fetchOrderDetails();
     } else {
+      console.log(data,132);
+      
       Alert.alert("There was an error");
     }
-    fetchOrderDetails();
   };
 
+  const getMessage = () => {
+    if (orderData?.deliveryPartner?._id === user?._id) {
+      switch (orderData?.status) {
+        case "confirmed":
+          return "Grab your order";
+        case "arriving":
+          return "Complete your order";
+        case "delivered":
+          return "Your milestone";
+        default:
+          return "Start this order";
+      }
+    } else if (orderData?.status === "available") {
+      return "You Missed it";
+    }
+    return "Start this order";
+  };
 
   return (
     <View style={styles.container}>
       <LiveHeader
         type="Delivery"
-        title={message}
+        title={getMessage()}
         secondTitle="Delivery in 10 minutes"
       />
       <ScrollView
@@ -170,15 +175,13 @@ const DeliveryMap: FC = () => {
           deliveryLocation={orderData?.deliveryLocation || null}
           hasAccepted={
             orderData?.deliveryPartner?._id === user?._id &&
-            orderData?.status == "confirmed"
+            orderData?.status === "confirmed"
           }
-          hasPickedUp={orderData?.status == "arriving"}
+          hasPickedUp={orderData?.status === "arriving"}
           pickupLocation={orderData?.pickupLocation || null}
         />
-
         <DeliveryAndDetails details={orderData?.customer} />
         <OrderSummary order={orderData} />
-
         <CustomText
           variant="h8"
           fontFamily={Fonts.SemiBold}
@@ -187,36 +190,37 @@ const DeliveryMap: FC = () => {
           Atul Soam X Blinkit
         </CustomText>
       </ScrollView>
-      {orderData?.status != "delivered" && orderData?.status != "cancelled" && (
-        <View style={[hocStyles.cartContainer, styles.btncontainer]}>
-          {orderData?.status == "available" && (
-            <CustomButton
-              disabled={false}
-              title="Accept Order"
-              onPress={acceptOrder}
-              loading={false}
-            />
-          )}
-          {orderData?.status == "confirmed" &&
-            orderData?.deliveryPartner?._id === user?._id && (
+      {orderData?.status !== "delivered" &&
+        orderData?.status !== "cancelled" && (
+          <View style={[hocStyles.cartContainer, styles.btncontainer]}>
+            {orderData?.status === "available" && (
               <CustomButton
                 disabled={false}
-                title="PickUp order"
-                onPress={orderPickedUp}
+                title="Accept Order"
+                onPress={acceptOrder}
                 loading={false}
               />
             )}
-          {orderData?.status == "arriving" &&
-            orderData?.deliveryPartner?._id === user?._id && (
-              <CustomButton
-                disabled={false}
-                title="Delivered"
-                onPress={DeliverOrder}
-                loading={false}
-              />
-            )}
-        </View>
-      )}
+            {orderData?.status === "confirmed" &&
+              orderData?.deliveryPartner?._id === user?._id && (
+                <CustomButton
+                  disabled={false}
+                  title="PickUp order"
+                  onPress={orderPickedUp}
+                  loading={false}
+                />
+              )}
+            {orderData?.status === "arriving" &&
+              orderData?.deliveryPartner?._id === user?._id && (
+                <CustomButton
+                  disabled={false}
+                  title="Delivered"
+                  onPress={DeliverOrder}
+                  loading={false}
+                />
+              )}
+          </View>
+        )}
     </View>
   );
 };
@@ -225,36 +229,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.primary,
-    // color:Colors.primary
   },
   scrollcontainer: {
     paddingBottom: 150,
     backgroundColor: Colors.backgroundSecondary,
     padding: 15,
   },
-  flexRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    width: "100%",
-    borderRadius: 15,
-    marginTop: 15,
-    paddingVertical: 10,
-    backgroundColor: "#fff",
-    padding: 10,
-    borderBottomWidth: 0.7,
-    borderColor: Colors.border,
-  },
-  iconContainer: {
-    backgroundColor: Colors.backgroundSecondary,
-    borderRadius: 100,
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   btncontainer: {
     padding: 10,
   },
 });
 
-export default  DeliveryMap;
+export default DeliveryMap;

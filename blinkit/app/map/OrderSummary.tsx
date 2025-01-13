@@ -13,6 +13,7 @@ const OrderSummary: FC<{ order: any }> = ({ order }) => {
         total + cartItem.item.price * cartItem.count,
       0
     ) || 0;
+    // console.log(order,"ordesummary")
   return (
     <View style={styles.container}>
       <View style={styles.flexRow}>

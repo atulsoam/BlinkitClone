@@ -1,12 +1,11 @@
-import { View, Text, StyleSheet } from "react-native";
-import React, { FC } from "react";
-import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import { View, Text, StyleSheet, Alert } from "react-native";
+import React, { FC, useEffect } from "react";
+import MapView, { Polyline } from "react-native-maps";
 import { customMapStyle } from "@/utils/CustomMap";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGleMapsApiKey } from "@/services/config";
 import Markers from "./Markers";
 import { Colors } from "@/utils/Constants";
-
 import { getPoints } from "./getPoints.js";
 
 const MapViewComponent = ({
@@ -19,16 +18,23 @@ const MapViewComponent = ({
   deliveryLocation,
   hasPickedup,
 }: any) => {
-  // console.log(getPoints([pickupLocation,deliveryLocation]),32)
-  // console.log(hasAccepted, hasPickedup);
+  // Using the provided mapRef directly, no need for a separate mapViewRef
+  useEffect(() => {
+    if (setMapRef) {
+      setMapRef(mapRef);
+    }
+  }, [setMapRef, mapRef]);
+
+  // console.log(deliverPersonLocation, "map component");
+  // console.log(pickupLocation, "map view component");
+  // console.log(deliveryLocation);
 
   return (
     <MapView
-      ref={setMapRef}
+      ref={mapRef}
       style={{ flex: 1 }}
-      // provider={PROVIDER_GOOGLE}
-      camera={camera}
-      // customMapStyle={customMapStyle}
+      // camera={camera}
+      customMapStyle={customMapStyle}
       showsUserLocation={true}
       userLocationCalloutEnabled={true}
       userLocationPriority="high"
@@ -40,6 +46,7 @@ const MapViewComponent = ({
       showsIndoors={false}
       showsScale={false}
       showsIndoorLevelPicker={false}
+      
     >
       {deliverPersonLocation && (hasPickedup || hasAccepted) && (
         <MapViewDirections
@@ -49,7 +56,13 @@ const MapViewComponent = ({
           apikey={GOOGleMapsApiKey}
           strokeColor="#2871F2"
           strokeWidth={5}
-          onError={(err) => console.log(err, "directionapi")}
+          onError={(err) => {
+            // Improved error handling: log or show an alert to user
+            console.error("MapViewDirections error: ", err);
+            Alert.alert(
+              "There was an issue loading the directions. Please try again."
+            );
+          }}
         />
       )}
       <Markers
@@ -57,7 +70,6 @@ const MapViewComponent = ({
         deliveryLocation={deliveryLocation}
         pickupLocation={pickupLocation}
       />
-
       {!hasPickedup && !hasAccepted && deliveryLocation && pickupLocation && (
         <Polyline
           coordinates={getPoints([pickupLocation, deliveryLocation])}

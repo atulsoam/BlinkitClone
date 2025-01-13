@@ -50,7 +50,7 @@ const DeliverDashboard = () => {
   }, []);
 
   const renderOrderItems = ({ item, index }: any) => {
-    console.log(item, 53);
+    // console.log(item, 53);
 
     return <OrderItem index={index} item={item} />;
   };
