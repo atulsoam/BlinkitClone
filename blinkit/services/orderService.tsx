@@ -1,7 +1,12 @@
 import { AndroidLayerType } from "react-native-webview/lib/WebViewTypes";
 import { appAxios } from "./ApiInterceptor";
 
-export const createOrder = async (items: any, totalPrice: number) => {
+export const createOrder = async (
+  items: any,
+  totalPrice: number,
+  addressId: any,
+  razorpay_payment_id: any
+) => {
   //   const { user, setUser } = useAuthStore();
 
   try {
@@ -9,6 +14,8 @@ export const createOrder = async (items: any, totalPrice: number) => {
       items: items,
       totalPrice: totalPrice,
       branch: "676d750bc2f6fd6e7497b16a",
+      addressId: addressId,
+      razorpay_payment_id: razorpay_payment_id,
     });
     return response.data;
   } catch (error) {
@@ -45,7 +52,7 @@ export const fetchOrder = async (selectedTab: any, id: any, branch: any) => {
   let query =
     selectedTab == "available"
       ? { status: selectedTab, branchId: branch }
-      : {  branchId: branch, deliveryPartnerId: id };
+      : { branchId: branch, deliveryPartnerId: id };
   try {
     const response = await appAxios.post(`/getAllOrder`, query);
     return response.data;
@@ -75,8 +82,8 @@ export const sendLiveOrderUpdates = async (
 
 export const confirmOrder = async (location: any, id: string) => {
   //   const { user, setUser } = useAuthStore();
-  console.log(location,"in confrmorder");
-  
+  console.log(location, "in confrmorder");
+
   try {
     const response = await appAxios.post(`/confirm/${id}`, {
       deliveryPersonLocation: location,

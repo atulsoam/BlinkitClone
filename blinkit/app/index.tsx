@@ -78,8 +78,8 @@ const SplashScreen = () => {
     try {
       const accessToken = await tokenStorage.getItem("accessToken"); // Replace with your actual access token
       const refreshToken = await tokenStorage.getItem("refreshToken");
-      // console.log(accessToken);
-      // console.log(refreshToken, 138);
+      console.log(accessToken);
+      console.log(refreshToken, 138);
 
       // Save tokens securely using functions from storage.ts
       if (accessToken && refreshToken) {
@@ -94,7 +94,7 @@ const SplashScreen = () => {
         if (decodedAccessToken?.exp < currentTime) {
           try {
             await RefreshToken();
-            await RefetchUser();
+            await RefetchUser(setUser);
           } catch (error) {
             Alert.alert("Error occured while access Token");
             console.log(error, "saveTokensAndRedirect");

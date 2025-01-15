@@ -9,12 +9,22 @@ export const CreateOrder = async (req, res) => {
   try {
     const { userID } = req.user;
 
-    const { items, branch, totalPrice } = req.body;
+    const { items, branch, totalPrice, addressId, razorpay_payment_id } = req.body;
 
     const customerData = await Customer.findById(userID);
     const branchData = await Branch.findById(branch);
     if (!customerData || !branchData) {
       return res.status(500).send({ message: "Something went worng" });
+    }
+    console.log(customerData.address);
+
+    const address = customerData.address.find(
+      (addr) => addr._id.toString() === addressId
+    );
+    console.log(address, addressId, 22);
+
+    if (!address) {
+      return res.status(400).send({ message: "Address not found" });
     }
 
     const newOrder = new Order({
@@ -29,13 +39,14 @@ export const CreateOrder = async (req, res) => {
       deliveryLocation: {
         latitude: customerData.liveLocation.latitude,
         longitude: customerData.liveLocation.longitude,
-        address: customerData.address || "No Address found",
+        address: address.address || "No Address found",
       },
       pickupLocation: {
         latitude: branchData.liveLocation.latitude,
         longitude: branchData.liveLocation.longitude,
         address: branchData.address || "No Address found",
       },
+      razorpay_payment_id: razorpay_payment_id,
     });
 
     await newOrder.save();
@@ -61,7 +72,9 @@ export const updateOrderStatus = async (req, res) => {
         .send({ message: "Couldn't found delivery person" });
     }
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate(
+      "customer branch items.item deliveryPartner"
+    );
     if (!order) {
       return res.status(404).send({ message: "Couldn't found order" });
     }

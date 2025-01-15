@@ -9,11 +9,17 @@ import { useRouter } from "expo-router";
 
 const OrderSuccessScreen: FC = () => {
   const { user } = useAuthStore();
-  const router =  useRouter();
+  const router = useRouter();
+  const selectedAddress = user?.address.find(
+    (addr: any) => addr.isSelected === true
+  );
+  const addressToShow = selectedAddress
+    ? selectedAddress.address
+    : user?.address[0]?.address;
   useEffect(() => {
     const timeout = setTimeout(() => {
       // console.log("Moving to live tracking screen");
-      router.push("/map/LiveTracking")
+      router.push("/map/LiveTracking");
     }, 2300);
     return () => clearTimeout(timeout);
   }, []);
@@ -50,7 +56,7 @@ const OrderSuccessScreen: FC = () => {
         style={styles.addresText}
         fontFamily={Fonts.Medium}
       >
-        {user?.address || "Somewhere or No where"}
+        {addressToShow}
       </CustomText>
     </View>
   );

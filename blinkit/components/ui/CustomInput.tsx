@@ -5,14 +5,14 @@ import { RFValue } from "react-native-responsive-fontsize";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface InputProps {
-  left: React.ReactNode;
+  left?: React.ReactNode;
   onClear?: () => void;
   right?: boolean;
 }
 const CustomInput: FC<InputProps & React.ComponentProps<typeof TextInput>> = ({
   left,
   onClear,
-  right = true,
+  right = false,
   ...props
 }) => {
   return (

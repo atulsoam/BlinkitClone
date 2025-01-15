@@ -5,7 +5,8 @@ import { updateUserLocation } from "./authServices";
 export const reverseGeocode = async (
   latitude: number,
   longitude: number,
-  setUser: any
+  setUser: any,
+  isCustomer: boolean
 ) => {
   // console.log(
   //   `https://maps.googleapis.com/maps/api/json?latlng=${latitude},${longitude}&key=${GOOGleMapsApiKey}`
@@ -21,10 +22,53 @@ export const reverseGeocode = async (
     if (response.data.status == "OK") {
       const address = response.data.results[0].formatted_address;
       // console.log(address);
-      await updateUserLocation({
-        liveLocation: { latitude, longitude },
-        address,
-      });
+      if (isCustomer) {
+        await updateUserLocation(
+          {
+            liveLocation: { latitude, longitude },
+            address: { id: address, address: address, isSelected: true },
+          },
+          setUser
+        );
+      } else {
+        await updateUserLocation(
+          {
+            liveLocation: { latitude, longitude },
+            address: address,
+          },
+          setUser
+        );
+      }
+    } else {
+      console.log(response.data, "geocode Failed");
+    }
+    return response.data;
+    // return null;
+  } catch (error) {
+    console.log(error, "fetchOrder");
+    return null;
+  }
+};
+
+export const GetCurrentAddressLocation = async (
+  latitude: number,
+  longitude: number
+) => {
+  // console.log(
+  //   `https://maps.googleapis.com/maps/api/json?latlng=${latitude},${longitude}&key=${GOOGleMapsApiKey}`
+  // );
+
+  try {
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGleMapsApiKey}`
+    );
+
+    // console.log(response.data, 14);
+
+    if (response.data.status == "OK") {
+      const address = response.data.results[0].formatted_address;
+      // console.log(address);
+      return address;
     } else {
       console.log(response.data, "geocode Failed");
     }

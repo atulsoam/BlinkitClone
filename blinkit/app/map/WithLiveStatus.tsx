@@ -19,7 +19,13 @@ const withLiveStatus = <P extends object>(
     );
 
     const socket = getSocketInstance(); // Get the singleton socket instance
-
+    useEffect(() => {
+      if (currentOrder) {
+        if (currentOrder?.status == "delivered") {
+          setCurrentOrder(null);
+        }
+      }
+    }, [currentOrder]);
     useEffect(() => {
       if (currentOrder) {
         socket.emit("joinRoom", currentOrder._id); // Join the room only once

@@ -64,10 +64,17 @@ const customerLogin: FC = () => {
       }
 
       const newSequance = [...geasuteSequance, direction].slice(-5);
+      console.log(newSequance);
+      
       setGeastureSequanc(newSequance);
       if (newSequance.join(" ") === "up up down left right") {
         setGeastureSequanc([]);
         router.push("/DeliveryLogin");
+      }
+      if (newSequance.join(" ")=== "up down down up"){
+        setGeastureSequanc([])
+        router.dismissAll()
+        router.push("/AdminLogin")
       }
     }
   };

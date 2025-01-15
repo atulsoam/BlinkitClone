@@ -11,8 +11,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "postinstal": "npx patch-package",
-    "build-android": "eas build --platform android",
-    "device":"npx eas device:create"
+    "build-android": "npx eas build --profile development --platform android",
+    "device": "npx eas device:create"
   },
   "jest": {
     "preset": "jest-expo"
@@ -24,7 +24,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "axios": "^1.7.9",
-    "expo": "~52.0.24",
+    "expo": "~52.0.25",
     "expo-blur": "~14.0.2",
     "expo-constants": "~17.0.4",
     "expo-font": "~13.0.3",
@@ -44,9 +44,11 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.6",
+    "react-native-collapsible": "^1.6.2",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-maps": "1.18.0",
     "react-native-maps-directions": "^1.9.0",
+    "react-native-razorpay": "^2.3.0",
     "react-native-reanimated": "~3.16.1",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-responsive-fontsize": "^0.5.1",
@@ -57,7 +59,8 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "socket.io-client": "^4.8.1",
-    "zustand": "^5.0.2"
+    "zustand": "^5.0.2",
+    "expo-dev-client": "~5.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

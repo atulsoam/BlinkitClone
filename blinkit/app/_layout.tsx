@@ -4,26 +4,44 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown:false
+        headerShown: false,
         // headerTintColor: "#fff",
         // headerTitleStyle: {
         //   fontWeight: "bold",
         // },
       }}
     >
+      <Stack.Screen name="index" />
       <Stack.Screen
-
-       name="index"  />
+        options={{
+          animation: "fade",
+        }}
+        name="CustomerLogin"
+      />
       <Stack.Screen
-      options={{
-        animation:"fade"
-      }}
-      name="CustomerLogin" />
+        options={{
+          animation: "fade",
+        }}
+        name="DeliveryLogin"
+      />
       <Stack.Screen
-      options={{
-        animation:"fade"
-      }}
-      name="DeliveryLogin" />
+        name="CartitemsModal"
+        options={{
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="ChangeAddressModal"
+        options={{
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="PaymentModal"
+        options={{
+          presentation: 'modal',
+        }}
+      />
     </Stack>
   );
 }

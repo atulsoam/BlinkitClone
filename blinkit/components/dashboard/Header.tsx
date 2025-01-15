@@ -18,12 +18,17 @@ import { reverseGeocode } from "@/services/mapService";
 const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
   const { user, setUser } = useAuthStore();
   const updateUSerLocatio = async () => {
-    Location.requestForegroundPermissionsAsync()
+    Location.requestForegroundPermissionsAsync();
     const position = await Location.getCurrentPositionAsync();
     const { latitude, longitude } = position.coords;
-    reverseGeocode(latitude, longitude, setUser);
+    reverseGeocode(latitude, longitude, setUser, true);
   };
-
+  const selectedAddress = user?.address.find(
+    (addr: any) => addr.isSelected === true
+  );
+  const addressToShow = selectedAddress
+    ? selectedAddress.address
+    : user?.address[0]?.address;
   useEffect(() => {
     updateUSerLocatio();
   }, []);
@@ -61,7 +66,7 @@ const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
             fontFamily={Fonts.Medium}
             style={styles.text2}
           >
-            {user?.address || "Knowwhere, SomeWhere Street"}
+            {addressToShow || "Knowwhere, SomeWhere Street"}
           </CustomText>
           <Ionicons
             name="arrow-down"

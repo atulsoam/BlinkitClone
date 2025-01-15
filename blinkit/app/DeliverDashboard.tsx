@@ -42,7 +42,7 @@ const DeliverDashboard = () => {
       accuracy: Location.Accuracy.High,
     });
     const { latitude, longitude } = (await position).coords;
-    reverseGeocode(latitude, longitude, setUser);
+    reverseGeocode(latitude, longitude, setUser,false);
   };
 
   useEffect(() => {

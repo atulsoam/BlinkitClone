@@ -1,0 +1,29 @@
+{
+    "__v": 0,
+    "_id": "67869c4028a9a48174c0f9c8",
+    "branch": "676d750bc2f6fd6e7497b16a",
+    "createdAt": "2025-01-14T17:17:52.768Z",
+    "customer": "6776a828a9f376a00dc4532a",
+    "deliveryLocation": {
+        "address": "5HV7+RGM, Meerut, Uttar Pradesh 250342, India",
+        "latitude": 29.194418134120063,
+        "longitude": 77.56327988475867
+    },
+    "items": [
+        {
+            "_id": "67869c4028a9a48174c0f9c9",
+            "count": 1,
+            "id": "676d2cdd6c29f34ea2db0f13",
+            "item": "676d2cdd6c29f34ea2db0f13"
+        }
+    ],
+    "orderId": "ORDR00002",
+    "pickupLocation": {
+        "address": "Chuur",
+        "latitude": 29.181367,
+        "longitude": 77.545737
+    },
+    "status": "available",
+    "totalPrice": 35,
+    "updatedAt": "2025-01-14T17:17:52.768Z"
+}

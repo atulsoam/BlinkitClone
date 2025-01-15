@@ -17,7 +17,6 @@ const generateToken = async (user) => {
   return { accessToken, refreshToken };
 };
 
-
 export const loginCustomer = async (req, res) => {
   try {
     const { phone } = req.body;
@@ -85,7 +84,6 @@ export const loginDeliverPartner = async (req, res) => {
   }
 };
 
-
 export const refresnTokenCustomerDeliveryPartner = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -127,6 +125,8 @@ export const refresnTokenCustomerDeliveryPartner = async (req, res) => {
 };
 
 export const fetchUser = async (req, res) => {
+  console.log("stating fetching user");
+
   try {
     const { userID, role } = req.user;
     let user;

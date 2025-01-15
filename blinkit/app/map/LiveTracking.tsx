@@ -29,6 +29,7 @@ const LiveTracking: FC = () => {
       setIsOrderFetched(true); // To avoid multiple requests
     }
   }, [currentOrder?._id, isOrderFetched]);
+  console.log(currentOrder);
 
   // Listen for order updates in real-time (optimized to only update if data changes)
   useEffect(() => {

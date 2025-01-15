@@ -34,11 +34,21 @@ const customerSchema = new mongoose.Schema({
     longitude: {
       type: Number,
     },
-    
   },
-  address: {
-    type: String,
-  },
+  address: [
+    {
+      id: {
+        type: String,
+      },
+      address: {
+        type: String,
+      },
+      isSelected: {
+        type: Boolean,
+        default: true,
+      },
+    },
+  ],
 });
 const deliveryPartnerSchema = new mongoose.Schema({
   ...User.obj,

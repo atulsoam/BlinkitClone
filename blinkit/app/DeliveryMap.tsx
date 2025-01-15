@@ -75,9 +75,8 @@ const DeliveryMap: FC = () => {
           setMylocation({ latitude, longitude });
           syncLocation(latitude, longitude);
         }
-        if (!mylocation){
+        if (!mylocation) {
           setMylocation({ latitude, longitude });
-
         }
       }
     );
@@ -115,6 +114,7 @@ const DeliveryMap: FC = () => {
     );
     if (data) {
       setCurrentOrder(data);
+      setOrderData(data);
       Alert.alert("Order Picked Up, Deliver as soon as possible");
       fetchOrderDetails();
     } else {
@@ -133,8 +133,8 @@ const DeliveryMap: FC = () => {
       Alert.alert("Order Delivered, Thank you");
       fetchOrderDetails();
     } else {
-      console.log(data,132);
-      
+      console.log(data, 132);
+
       Alert.alert("There was an error");
     }
   };

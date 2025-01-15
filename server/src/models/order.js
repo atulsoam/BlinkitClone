@@ -85,6 +85,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    razorpay_payment_id: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

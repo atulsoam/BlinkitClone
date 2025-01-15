@@ -6,8 +6,15 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "@/components/ui/CustomText";
 
 const DeliveryAndDetails: FC<{ details: any }> = ({ details }) => {
-  // console.log(details,"deliverydetails");
-  
+  console.log(details,"deliverydetails");
+
+  const selectedAddress = details?.address?.find(
+    (addr: any) => addr.isSelected === true
+  );
+  const addressToShow = selectedAddress
+    ? selectedAddress.address
+    : details?.address[0]?.address;
+
   return (
     <View style={styles.container}>
       <View style={styles.flexRow}>
@@ -40,21 +47,17 @@ const DeliveryAndDetails: FC<{ details: any }> = ({ details }) => {
             Delivery at Home
           </CustomText>
           <CustomText variant="h8" numberOfLines={2} fontFamily={Fonts.Regular}>
-            {details?.address}
+            {addressToShow}
           </CustomText>
         </View>
       </View>
       <View style={styles.flexRow2}>
         <View style={styles.iconContainer}>
-          <Ionicons
-            name="call"
-            color={Colors.disabled}
-            size={RFValue(20)}
-          />
+          <Ionicons name="call" color={Colors.disabled} size={RFValue(20)} />
         </View>
         <View style={{ width: "80%" }}>
           <CustomText variant="h5" fontFamily={Fonts.Medium}>
-           {details?.name} {details?.phone}
+            {details?.name} {details?.phone}
           </CustomText>
           <CustomText variant="h8" numberOfLines={2} fontFamily={Fonts.Regular}>
             Reciver's Contact numebr

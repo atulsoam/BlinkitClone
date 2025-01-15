@@ -19,8 +19,8 @@ export const CustomerLogin = async (
     // console.log(customer, "customer");
     // console.log(accessToken, "acces");
     // console.log(refreshToken, "refresh");
-    tokenStorage.setItem("accessToken", accessToken);
-    tokenStorage.setItem("refreshToken", refreshToken);
+    await tokenStorage.setItem("accessToken", accessToken);
+    await tokenStorage.setItem("refreshToken", refreshToken);
     setUser(customer);
   } catch (error) {
     console.log(error, "authServices");
@@ -68,18 +68,21 @@ export const RefreshToken = async () => {
   }
 };
 
-export const RefetchUser = async () => {
-  const { user, setUser } = useAuthStore();
+export const RefetchUser = async (setUser: any) => {
+  console.log("started fetching user");
 
   try {
     const response = await appAxios.get(`/fetchuser`);
+    console.log(response.data.user, 76);
+
     setUser(response.data.user);
+    return response.data;
   } catch (error) {
-    console.log(error, "authServices");
+    console.log(error, "RefetchUser");
   }
 };
 
-export const updateUserLocation = async (liveLocation: any) => {
+export const updateUserLocation = async (liveLocation: any,setUser:any) => {
   // console.log(liveLocation,83);
 
   try {
@@ -87,8 +90,12 @@ export const updateUserLocation = async (liveLocation: any) => {
       updatedData: liveLocation,
     });
     // console.log(response.data,87);
+    // const { setUser } = useAuthStore();
 
-    RefetchUser();
+    await RefetchUser(setUser);
+    // console.log(refectchdata, "from updateUserLocation");
+
+    // return true;
   } catch (error) {
     console.log(error, "updateUserLocation");
   }

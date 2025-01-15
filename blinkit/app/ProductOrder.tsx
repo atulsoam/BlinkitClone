@@ -20,27 +20,64 @@ import BillDetails from "./order/BillDetails";
 import { hocStyles } from "@/components/global/GlobelStyles";
 import ArrowButton from "./order/ArrowButton";
 import { useAuthStore } from "@/state/authStore";
-import { createOrder } from "@/services/orderService";
+import { createOrder, getOrderByID } from "@/services/orderService";
 import { useRouter } from "expo-router";
+import RazorpayCheckout from "react-native-razorpay";
 
 const ProductOrder: FC = () => {
   const router = useRouter();
   const { user, setCurrentOrder, currentOrder, logout } = useAuthStore();
-  // console.log(currentOrder, 29);
-
-  // setCurrentOrder(null)
-  // logout()
-  // if (currentOrder != null){
-  //   router.push("/map/LiveTracking")
-  // }
 
   const [loading, setLoading] = useState(false);
-  const { getTotalPrice, cart, clearCart } = useCartStore();
+  const { getTotalPrice, cart, clearCart, getPaymentMode } = useCartStore();
   const totalItemPrice = getTotalPrice();
+  const paymentModeData = getPaymentMode();
+  const selectedAddress = user?.address.find(
+    (addr: any) => addr.isSelected === true
+  );
+  const addressToShow = selectedAddress
+    ? selectedAddress.address
+    : user?.address[0]?.address;
+  // console.log(selectedAddress,"selectedAddress");
+
+  const HandlePayment = async ()=> {
+    const options = {
+      description: "Purchase Description",
+      // image: "https://your-image-url.com",
+      currency: "INR",
+      key: "rzp_test_EHQwt0AWXcffIx", // Your Razorpay test key
+      amount: (totalItemPrice + 34) * 100, // Amount in paise
+      name: "Balaji Foods",
+      prefill: {
+        contact: user?.phone,
+        name: user?.name,
+      },
+      theme: { color: "#F37254" },
+    };
+    return RazorpayCheckout.open(options)
+      .then((data: any) => {
+        // Payment successful
+        console.log("Payment Successful", data);
+        return { success: true, data };
+      })
+      .catch((error: any) => {
+        // Payment failed
+        console.log("Payment Failed", error);
+        return { success: false, error };
+      });
+    // return false
+  };
   const HandlePlaceOrder = async () => {
+    const paymentStatus = await HandlePayment();
+    console.log(paymentStatus, 72);
+
+    if (!paymentStatus.success) {
+      Alert.alert("Payment Failed");
+      return;
+    }
     if (currentOrder !== null) {
       Alert.alert("Let the first order delivered!");
-      router.push("/map/LiveTracking")
+      router.push("/map/LiveTracking");
       return;
     }
     const formatedData = cart.map((item) => ({
@@ -54,9 +91,15 @@ const ProductOrder: FC = () => {
     }
     setLoading(true);
 
-    const data = await createOrder(formatedData, totalItemPrice);
+    const data = await createOrder(
+      formatedData,
+      totalItemPrice,
+      selectedAddress._id,
+      paymentStatus.data?.razorpay_payment_id
+    );
     if (data != null) {
-      setCurrentOrder(data);
+      const updatedData = await getOrderByID(data._id);
+      setCurrentOrder(updatedData);
       clearCart();
       // console.log("navigate to succes order");
       router.push("/order/OrderSuccessScreen");
@@ -67,6 +110,7 @@ const ProductOrder: FC = () => {
 
     setLoading(false);
   };
+
   return (
     <View style={styles.container}>
       <CustomHeader title="Checkout" />
@@ -127,12 +171,16 @@ const ProductOrder: FC = () => {
                   numberOfLines={2}
                   style={{ opacity: 0.6 }}
                 >
-                  {user?.address}
+                  {addressToShow}
                   {/* Addres will be here */}
                 </CustomText>
               </View>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/ChangeAddressModal");
+              }}
+            >
               <CustomText
                 variant="h8"
                 style={{ color: Colors.secondary }}
@@ -142,12 +190,18 @@ const ProductOrder: FC = () => {
               </CustomText>
             </TouchableOpacity>
           </View>
+
           <View style={styles.paymentGatway}>
-            <View style={{ width: "30%" }}>
+            <TouchableOpacity
+              style={{ width: "30%" }}
+              onPress={() => {
+                router.push("/PaymentModal");
+              }}
+            >
               <CustomText
-                fontSize={RFValue(6)}
-                variant="h8"
-                fontFamily={Fonts.Regular}
+                fontSize={RFValue(8)}
+                variant="h5"
+                fontFamily={Fonts.SemiBold}
               >
                 PAY USING
               </CustomText>
@@ -156,9 +210,9 @@ const ProductOrder: FC = () => {
                 style={{ marginTop: 2 }}
                 fontFamily={Fonts.Regular}
               >
-                Cash On Delivery
+                {paymentModeData?.name}
               </CustomText>
-            </View>
+            </TouchableOpacity>
             <View style={{ width: "70%" }}>
               <ArrowButton
                 loading={loading}

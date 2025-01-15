@@ -11,8 +11,7 @@ const CartSummary: FC<{ cartCount: number; cartImage?: string }> = ({
   cartCount,
   cartImage,
 }) => {
-
-    const router =  useRouter()
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <View style={styles.flexRowGap}>
@@ -31,6 +30,9 @@ const CartSummary: FC<{ cartCount: number; cartImage?: string }> = ({
           name="caret-up-outline"
           color={Colors.secondary}
           size={RFValue(25)}
+          onPress={() => {
+            router.push("/CartitemsModal");
+          }}
         />
       </View>
 
@@ -38,7 +40,7 @@ const CartSummary: FC<{ cartCount: number; cartImage?: string }> = ({
         style={styles.btn}
         activeOpacity={0.7}
         onPress={() => {
-          router.push("/ProductOrder")
+          router.push("/ProductOrder");
         }}
       >
         <CustomText
