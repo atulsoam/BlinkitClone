@@ -23,7 +23,7 @@ const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
     const { latitude, longitude } = position.coords;
     reverseGeocode(latitude, longitude, setUser, true);
   };
-  const selectedAddress = user?.address.find(
+  const selectedAddress = user?.address?.find(
     (addr: any) => addr.isSelected === true
   );
   const addressToShow = selectedAddress
@@ -73,6 +73,9 @@ const Header: FC<{ showNotice: () => void }> = ({ showNotice }) => {
             color="#fff"
             size={RFValue(10)}
             style={{ bottom: -1 }}
+            onPress={() => {
+              router.push("/ChangeAddressModal");
+            }}
           />
         </View>
       </TouchableOpacity>

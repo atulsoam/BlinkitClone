@@ -29,7 +29,7 @@ const LiveTracking: FC = () => {
       setIsOrderFetched(true); // To avoid multiple requests
     }
   }, [currentOrder?._id, isOrderFetched]);
-  console.log(currentOrder);
+  console.log(currentOrder,"live tracking");
 
   // Listen for order updates in real-time (optimized to only update if data changes)
   useEffect(() => {
@@ -39,6 +39,8 @@ const LiveTracking: FC = () => {
 
     const orderUpdatesHandler = (updatedOrder: any) => {
       // Only update state if the order data has changed
+      console.log(updatedOrder,"live");
+      
       if (JSON.stringify(updatedOrder) !== JSON.stringify(currentOrder)) {
         setCurrentOrder(updatedOrder);
       }

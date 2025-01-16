@@ -26,7 +26,7 @@ import RazorpayCheckout from "react-native-razorpay";
 
 const ProductOrder: FC = () => {
   const router = useRouter();
-  const { user, setCurrentOrder, currentOrder, logout } = useAuthStore();
+  const { user, setCurrentOrder, currentOrder } = useAuthStore();
 
   const [loading, setLoading] = useState(false);
   const { getTotalPrice, cart, clearCart, getPaymentMode } = useCartStore();
@@ -40,7 +40,7 @@ const ProductOrder: FC = () => {
     : user?.address[0]?.address;
   // console.log(selectedAddress,"selectedAddress");
 
-  const HandlePayment = async ()=> {
+  const HandlePayment = async () => {
     const options = {
       description: "Purchase Description",
       // image: "https://your-image-url.com",
@@ -195,7 +195,7 @@ const ProductOrder: FC = () => {
             <TouchableOpacity
               style={{ width: "30%" }}
               onPress={() => {
-                router.push("/PaymentModal");
+                // router.push("/PaymentModal");
               }}
             >
               <CustomText
@@ -210,7 +210,7 @@ const ProductOrder: FC = () => {
                 style={{ marginTop: 2 }}
                 fontFamily={Fonts.Regular}
               >
-                {paymentModeData?.name}
+                Select on next screen
               </CustomText>
             </TouchableOpacity>
             <View style={{ width: "70%" }}>

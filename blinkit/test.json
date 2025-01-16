@@ -1,20 +1,54 @@
 {
     "__v": 0,
-    "_id": "67869c4028a9a48174c0f9c8",
-    "branch": "676d750bc2f6fd6e7497b16a",
-    "createdAt": "2025-01-14T17:17:52.768Z",
-    "customer": "6776a828a9f376a00dc4532a",
+    "_id": "6788aa86aefdf7e589650612",
+    "branch": {
+        "DeliveryPartners": [],
+        "__v": 0,
+        "_id": "676d750bc2f6fd6e7497b16a",
+        "address": "Chuur",
+        "liveLocation": {
+            "latitude": 29.181367,
+            "longitude": 77.545737
+        },
+        "name": "FirstBranch"
+    },
+    "createdAt": "2025-01-16T06:43:18.674Z",
+    "customer": {
+        "__v": 0,
+        "_id": "6776a828a9f376a00dc4532a",
+        "address": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+        "isActivated": true,
+        "liveLocation": {
+            "latitude": 29.1932182,
+            "longitude": 77.563983
+        },
+        "name": "Atul Admin",
+        "phone": 6398914011,
+        "role": "Customer"
+    },
     "deliveryLocation": {
-        "address": "5HV7+RGM, Meerut, Uttar Pradesh 250342, India",
-        "latitude": 29.194418134120063,
-        "longitude": 77.56327988475867
+        "address": "5HV7+6M7, Uttar Pradesh 250342, India",
+        "latitude": 29.1932182,
+        "longitude": 77.563983
     },
     "items": [
         {
-            "_id": "67869c4028a9a48174c0f9c9",
+            "_id": "6788aa86aefdf7e589650613",
             "count": 1,
-            "id": "676d2cdd6c29f34ea2db0f13",
-            "item": "676d2cdd6c29f34ea2db0f13"
+            "id": "676d2cdd6c29f34ea2db0f14",
+            "item": [Object
+            ]
         }
     ],
     "orderId": "ORDR00002",
@@ -23,7 +57,8 @@
         "latitude": 29.181367,
         "longitude": 77.545737
     },
+    "razorpay_payment_id": "pay_Pk1IYRM8DfkFGa",
     "status": "available",
-    "totalPrice": 35,
-    "updatedAt": "2025-01-14T17:17:52.768Z"
+    "totalPrice": 380,
+    "updatedAt": "2025-01-16T06:43:18.674Z"
 }

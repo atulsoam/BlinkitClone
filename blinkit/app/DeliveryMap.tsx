@@ -98,7 +98,7 @@ const DeliveryMap: FC = () => {
   const acceptOrder = async () => {
     const data = await confirmOrder(mylocation, orderData?._id);
     if (data) {
-      setCurrentOrder(data);
+      // setCurrentOrder(data);
       Alert.alert("Order Accepted, Grab your package");
       fetchOrderDetails();
     } else {
@@ -113,8 +113,8 @@ const DeliveryMap: FC = () => {
       "arriving"
     );
     if (data) {
-      setCurrentOrder(data);
-      setOrderData(data);
+      // setCurrentOrder(data);
+      // setOrderData(data);
       Alert.alert("Order Picked Up, Deliver as soon as possible");
       fetchOrderDetails();
     } else {
@@ -129,7 +129,7 @@ const DeliveryMap: FC = () => {
       "delivered"
     );
     if (data) {
-      setCurrentOrder(data);
+      // setCurrentOrder(data);
       Alert.alert("Order Delivered, Thank you");
       fetchOrderDetails();
     } else {

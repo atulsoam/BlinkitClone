@@ -34,6 +34,7 @@ const MapViewComponent = ({
       ref={mapRef}
       style={{ flex: 1 }}
       // camera={camera}
+      // provider="google"
       customMapStyle={customMapStyle}
       showsUserLocation={true}
       userLocationCalloutEnabled={true}

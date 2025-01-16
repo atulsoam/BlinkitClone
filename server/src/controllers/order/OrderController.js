@@ -9,7 +9,8 @@ export const CreateOrder = async (req, res) => {
   try {
     const { userID } = req.user;
 
-    const { items, branch, totalPrice, addressId, razorpay_payment_id } = req.body;
+    const { items, branch, totalPrice, addressId, razorpay_payment_id } =
+      req.body;
 
     const customerData = await Customer.findById(userID);
     const branchData = await Branch.findById(branch);
@@ -117,7 +118,9 @@ export const confirmOrder = async (req, res) => {
     if (!deliverpersonData) {
       return res.status(405).send({ message: "delivery person not found" });
     }
-    const orderData = await Order.findById(orderId);
+    const orderData = await Order.findById(orderId).populate(
+      "customer branch items.item deliveryPartner"
+    );
 
     if (!orderData) {
       return res.status(404).send({ message: "Order not found" });
