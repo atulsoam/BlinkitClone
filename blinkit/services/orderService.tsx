@@ -69,6 +69,8 @@ export const sendLiveOrderUpdates = async (
 ) => {
   //   const { user, setUser } = useAuthStore();
   try {
+    console.log("updating status or location", id, location, status);
+
     const response = await appAxios.patch(`/updateOrder/${id}`, {
       status: status,
       deliveryPersonLocation: location,

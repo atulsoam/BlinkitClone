@@ -5,7 +5,10 @@ import {
   useCollapsibleContext,
 } from "@r0b0t3d/react-native-collapsible";
 import { Colors } from "@/utils/Constants";
-import Animated, { useAnimatedStyle, interpolate } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  interpolate,
+} from "react-native-reanimated";
 import SearchBar from "@/components/dashboard/SearchBar";
 
 const StickSearchBar = () => {
@@ -14,13 +17,13 @@ const StickSearchBar = () => {
     const opacity = interpolate(scrollY.value, [0, 140], [0, 1]);
     return { opacity };
   });
-  const backgroundColorChanges =  useAnimatedStyle(() => {
-    const opacity =  interpolate(scrollY.value, [1, 80], [0, 1]);
-    return {backgroundColor: `rgba(255,255,255,${opacity})`};
-    });
+  const backgroundColorChanges = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollY.value, [1, 80], [0, 1]);
+    return { backgroundColor: `rgba(255,255,255,${opacity})` };
+  });
   return (
     <StickyView style={[backgroundColorChanges]}>
-        <SearchBar  />
+      <SearchBar />
       <Animated.View style={[styles.shadow, animatedShadow]} />
     </StickyView>
   );
