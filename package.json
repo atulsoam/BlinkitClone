@@ -5,8 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd server && nodemon app.js",
-    "build":"npm install",
-    "startProd":"cd server && node app.js"
+    "build": "npm install",
+    "startProd": "cd server && node app.js"
   },
   "keywords": [],
   "author": "",

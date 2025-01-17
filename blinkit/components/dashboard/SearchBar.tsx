@@ -5,14 +5,17 @@ import { Colors, Fonts } from "@/utils/Constants";
 import { RFValue } from "react-native-responsive-fontsize";
 import RollingBar from "react-native-rolling-bar";
 import CustomText from "../ui/CustomText";
+import { useRouter } from "expo-router";
 
 const SearchBar: FC = () => {
+  const router = useRouter();
   return (
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.8}
       onPress={() => {
-        console.log("clicked on search Bar");
+        // router.dismissAll();
+        router.navigate("/dashboard/SearchPage");
       }}
     >
       <Ionicons name="search" size={RFValue(20)} color={Colors.text} />

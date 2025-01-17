@@ -5,7 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useRouter } from "expo-router";
 import CustomText from "./CustomText";
-const CustomHeader: FC<{ title: string; search?: boolean }> = ({ title,search }) => {
+const CustomHeader: FC<{ title: string; search?: boolean }> = ({
+  title,
+  search,
+}) => {
   const router = useRouter();
   return (
     <SafeAreaView>
@@ -17,15 +20,25 @@ const CustomHeader: FC<{ title: string; search?: boolean }> = ({ title,search })
             size={RFValue(16)}
           />
         </Pressable>
-        <CustomText variant="h5" style={styles.text} fontFamily={Fonts.SemiBold}>
+        <CustomText
+          variant="h5"
+          style={styles.text}
+          fontFamily={Fonts.SemiBold}
+        >
           {title}
         </CustomText>
         <View>
-            {
-                search && <Ionicons name="search" color={Colors.text} size={RFValue(16)} />
-            }
+          {search && (
+            <Ionicons
+              name="search"
+              color={Colors.text}
+              size={RFValue(16)}
+              onPress={() => {
+                router.navigate("/dashboard/SearchPage");
+              }}
+            />
+          )}
         </View>
-
       </View>
     </SafeAreaView>
   );

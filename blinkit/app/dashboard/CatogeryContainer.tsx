@@ -26,7 +26,6 @@ const CatogeryContainer: FC<{ data: any }> = ({ data }) => {
                 fontFamily={Fonts.Medium}
                 // fontSize={10}
                 // numberOfLines={1}
-
               >
                 {item.name}
               </CustomText>
@@ -45,41 +44,40 @@ const CatogeryContainer: FC<{ data: any }> = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      marginVertical: 15,
-    },
-    row: {
-      flexDirection: "row",
-      justifyContent: "space-between",
+  container: {
+    marginVertical: 15,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     //   alignItems: "baseline",
-      marginBottom: 25,
-    },
-    scalepress: {
-        width:"22%",
-      height: 100,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    imageContainer: {
-      width: "100%",
-      height: 80,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 10,
+    marginBottom: 25,
+  },
+  scalepress: {
+    width: "22%",
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageContainer: {
+    width: "100%",
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
     //   gap:10,
-      padding: 6,
-      backgroundColor: "#E5F3F3", // Corrected the color format
-      marginBottom: 8,
-    },
-    image: {
-      width: "100%",
-      height: "100%",
-      resizeMode: "contain",
-    },
-    text: {
-      textAlign: "center",
-     
-    },
-  });
+    padding: 6,
+    backgroundColor: "#E5F3F3", // Corrected the color format
+    marginBottom: 8,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  text: {
+    textAlign: "center",
+  },
+});
 
 export default CatogeryContainer;

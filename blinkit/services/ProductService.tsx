@@ -16,13 +16,24 @@ export const getAllCategories = async () => {
   }
 };
 
-export const getProductByCategoryId = async (categoryId:any) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/getProductByCategory/${categoryId}`);
-      return response.data;
-    } catch (error) {
-      console.log(error, "getProductByCategoryId");
-      return [];
-    }
-  };
+export const getProductByCategoryId = async (categoryId: any) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/getProductByCategory/${categoryId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error, "getProductByCategoryId");
+    return [];
+  }
+};
 
+export const getAllProduct = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getAllProduct`);
+    return response.data;
+  } catch (error) {
+    console.log(error, "getAllProduct");
+    return [];
+  }
+};
