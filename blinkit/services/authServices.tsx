@@ -6,7 +6,6 @@ import axios from "axios";
 import { appAxios } from "./ApiInterceptor";
 import { tokenStorage } from "@/state/storageMMkv";
 import { useAuthStore } from "@/state/authStore";
-// console.log(BASE_URL);
 
 export const CustomerLogin = async (
   phone: string,
@@ -69,11 +68,9 @@ export const RefreshToken = async () => {
 };
 
 export const RefetchUser = async (setUser: any) => {
-  console.log("started fetching user");
 
   try {
     const response = await appAxios.get(`/fetchuser`);
-    console.log(response.data.user, 76);
 
     setUser(response.data.user);
     return response.data;

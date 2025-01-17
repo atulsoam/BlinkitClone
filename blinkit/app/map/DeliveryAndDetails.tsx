@@ -6,7 +6,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "@/components/ui/CustomText";
 
 const DeliveryAndDetails: FC<{ details: any }> = ({ details }) => {
-  console.log(details,"deliverydetails");
+  // console.log(details,"deliverydetails");
 
   const selectedAddress = details?.address?.find(
     (addr: any) => addr.isSelected === true

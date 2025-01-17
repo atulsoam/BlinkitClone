@@ -64,7 +64,7 @@ const customerLogin: FC = () => {
       }
 
       const newSequance = [...geasuteSequance, direction].slice(-5);
-      console.log(newSequance);
+      // console.log(newSequance);
       
       setGeastureSequanc(newSequance);
       if (newSequance.join(" ") === "up up down left right") {

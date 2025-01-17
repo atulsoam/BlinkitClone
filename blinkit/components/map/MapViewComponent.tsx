@@ -25,9 +25,7 @@ const MapViewComponent = ({
     }
   }, [setMapRef, mapRef]);
 
-  // console.log(deliverPersonLocation, "map component");
-  // console.log(pickupLocation, "map view component");
-  // console.log(deliveryLocation);
+
 
   return (
     <MapView
@@ -35,6 +33,7 @@ const MapViewComponent = ({
       style={{ flex: 1 }}
       // camera={camera}
       // provider="google"
+      mapType="standard"
       customMapStyle={customMapStyle}
       showsUserLocation={true}
       userLocationCalloutEnabled={true}

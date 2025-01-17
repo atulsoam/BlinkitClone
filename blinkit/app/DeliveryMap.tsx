@@ -31,7 +31,6 @@ const DeliveryMap: FC = () => {
   const { setCurrentOrder } = useAuthStore();
 
   const fetchOrderDetails = useCallback(async () => {
-    console.log("data requested socket");
     socketInstance.emit("needOrderData", parsedItem?._id);
   }, [parsedItem?._id]);
 
@@ -46,7 +45,6 @@ const DeliveryMap: FC = () => {
 
   useEffect(() => {
     socketInstance.on("orderUpdates", (updatedOrder) => {
-      console.log("data received from socket");
       setOrderData(updatedOrder);
     });
 
@@ -64,7 +62,6 @@ const DeliveryMap: FC = () => {
       },
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log(latitude, 67);
 
         // Avoid triggering unnecessary updates
         if (
@@ -133,7 +130,6 @@ const DeliveryMap: FC = () => {
       Alert.alert("Order Delivered, Thank you");
       fetchOrderDetails();
     } else {
-      console.log(data, 132);
 
       Alert.alert("There was an error");
     }

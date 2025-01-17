@@ -84,7 +84,7 @@ const UpiPayment: React.FC<{ setPaymentMode: (paymentMode: any) => void }> = ({
               style={styles.item}
               onPress={() => {
                 setPaymentMode(item);
-                console.log(item, "upipayment");
+                // console.log(item, "upipayment");
               }}
             >
               <View style={styles.iconTextContainer}>
@@ -97,7 +97,7 @@ const UpiPayment: React.FC<{ setPaymentMode: (paymentMode: any) => void }> = ({
               style={styles.item}
               onPress={() => {
                 setPaymentMode(item);
-                console.log(item, "upipayment");
+                // console.log(item, "upipayment");
               }}
             >
               <View style={styles.iconTextContainer}>

@@ -37,7 +37,7 @@ const ChangeAddressModal = () => {
   };
 
   const handleAddNewAddress = async (item: any) => {
-    console.log(item, 400000000);
+    // console.log(item, 400000000);
     if (item) {
       await updateUserLocation(
         {

@@ -94,15 +94,12 @@ export const updateOrderStatus = async (req, res) => {
     order.status = status;
     order.deliveryPersonLocation = deliveryPersonLocation;
     await order.save();
-    req.server.io
-      .to(orderId)
-      .emit(
-        "liveTrackingUpdates",
-        order.populate("customer branch items.item deliveryPartner")
-      );
-    return res
-      .status(200)
-      .send(order.populate("customer branch items.item deliveryPartner"));
+    const orderTosend = await Order.findById(orderId).populate(
+      "customer branch items.item deliveryPartner"
+    );
+
+    req.server.io.to(orderId).emit("liveTrackingUpdates", orderTosend);
+    return res.status(200).send(orderTosend);
   } catch (error) {
     console.log(`Error in updateOrderStatus ${error}`);
     return res.status(405).send({ message: "Couldn't update order" });

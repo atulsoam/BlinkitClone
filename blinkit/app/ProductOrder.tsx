@@ -69,7 +69,7 @@ const ProductOrder: FC = () => {
   };
   const HandlePlaceOrder = async () => {
     const paymentStatus = await HandlePayment();
-    console.log(paymentStatus, 72);
+    // console.log(paymentS/tatus, 72);
 
     if (!paymentStatus.success) {
       Alert.alert("Payment Failed");
