@@ -3,7 +3,7 @@ import * as AdminJsMongoose from "@adminjs/mongoose";
 import * as models from "../models/index.js";
 import AdminJSFastify from "@adminjs/fastify";
 import { authenticate, COKKIE_PASSWORD, sessionStore } from "./config.js";
-import {dark,light} from "@adminjs/themes"
+import { dark, light } from "@adminjs/themes";
 
 AdminJS.registerAdapter(AdminJsMongoose);
 
@@ -45,13 +45,16 @@ export const Admin = new AdminJS({
     {
       resource: models.Counter,
     },
+    {
+      resource: models.MainCategory,
+    },
   ],
   branding: {
-    companyName: "Blinkit",
+    companyName: "BalaJiFoods",
     withMadeWithLove: false,
   },
-  defaultTheme:dark.id,
-  availableThemes :[dark,light],
+  defaultTheme: dark.id,
+  availableThemes: [dark, light],
   rootPath: "/admin",
 });
 

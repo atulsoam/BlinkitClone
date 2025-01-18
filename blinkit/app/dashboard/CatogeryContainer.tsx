@@ -13,12 +13,17 @@ const CatogeryContainer: FC<{ data: any }> = ({ data }) => {
         {items.map((item, index) => {
           return (
             <ScalePress
-              onPress={() => router.push("/ProductCategories")}
+              onPress={() =>
+                router.push({
+                  pathname: "/ProductCategories",
+                  params: { catagoryId: item._id },
+                })
+              }
               key={index}
               style={styles.scalepress}
             >
               <View style={styles.imageContainer}>
-                <Image source={item.image} style={styles.image} />
+                <Image source={{ uri: item.image }} style={styles.image} />
               </View>
               <CustomText
                 variant="h8"
@@ -38,7 +43,7 @@ const CatogeryContainer: FC<{ data: any }> = ({ data }) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>{renderItems(data?.slice(0, 4))}</View>
-      <View style={styles.row}>{renderItems(data?.slice(4))}</View>
+      {/* <View style={styles.row}>{renderItems(data?.slice(4))}</View> */}
     </View>
   );
 };

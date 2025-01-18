@@ -6,8 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
 } from "react-native";
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import NotificationAnimation from "./dashboard/NotificationAnimation";
 import { NoticeHeight, screenHeight } from "@/utils/Scaling";
 import Visual from "./dashboard/Visual";
@@ -23,7 +24,7 @@ import StickSearchBar from "./dashboard/StickSearchBar";
 import ContentContainer from "./dashboard/ContentContainer";
 import CustomText from "@/components/ui/CustomText";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Fonts } from "@/utils/Constants";
+import { Colors, Fonts } from "@/utils/Constants";
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -34,28 +35,26 @@ import { Ionicons } from "@expo/vector-icons";
 import withCart from "./cart/WithCart";
 import { useAuthStore } from "@/state/authStore";
 import withLiveStatus from "./map/WithLiveStatus";
-// import {fonts as Fonts} from "../assets/fonts/"
+import { getAllMainCategories } from "@/services/ProductService";
 
-
-
-// This is the default configuration
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
-  strict: false, // Reanimated runs in strict mode by default
+  strict: false,
 });
+
 const NOTICE_HEIGHT = -(NoticeHeight + 12);
 
 const ProductDashboard: FC = () => {
-  // const{logout}= useAuthStore()
-  // logout()
+  const [mainCategory, setMainCategory] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
 
   const { scrollY, expand } = useCollapsibleContext();
   const previousScroll = useRef<number>(0);
   const backToTopStyles = useAnimatedStyle(() => {
-    const isScollingUp =
+    const isScrollingUp =
       scrollY.value < previousScroll.current && scrollY.value > 180;
-    const opacity = withTiming(isScollingUp ? 1 : 0, { duration: 300 });
-    const translateY = withTiming(isScollingUp ? 0 : 10, { duration: 300 });
+    const opacity = withTiming(isScrollingUp ? 1 : 0, { duration: 300 });
+    const translateY = withTiming(isScrollingUp ? 0 : 10, { duration: 300 });
     previousScroll.current = scrollY.value;
     return {
       opacity,
@@ -72,6 +71,7 @@ const ProductDashboard: FC = () => {
       useNativeDriver: false,
     }).start();
   };
+
   const slideDown = () => {
     RNAnimated.timing(noticPosition, {
       toValue: 0,
@@ -82,10 +82,30 @@ const ProductDashboard: FC = () => {
 
   useEffect(() => {
     slideDown();
+
     const timeout = setTimeout(() => {
       slideUp();
     }, 3500);
+
     return () => clearTimeout(timeout);
+  }, []);
+
+  const FetchMainCategory = async () => {
+    setLoading(true); // Set loading to true while fetching
+    try {
+      console.log("fetching main categories...");
+      const data = await getAllMainCategories();
+      setMainCategory(data); // Set the fetched categories to state
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching is done
+    }
+  };
+
+  // Fetch categories when the component mounts
+  useEffect(() => {
+    FetchMainCategory();
   }, []);
 
   return (
@@ -121,6 +141,7 @@ const ProductDashboard: FC = () => {
               </CustomText>
             </TouchableOpacity>
           </Animated.View>
+
           <CollapsibleContainer style={styles.panelContainer}>
             <CollapsibleHeaderContainer containerStyle={styles.transparant}>
               <AnimatedHeader
@@ -134,12 +155,19 @@ const ProductDashboard: FC = () => {
               />
               <StickSearchBar />
             </CollapsibleHeaderContainer>
+
             <CollapsibleScrollView
               nestedScrollEnabled={true}
               style={styles.panelContainer}
               showsVerticalScrollIndicator={false}
             >
-              <ContentContainer />
+              {loading ? (
+                <ActivityIndicator size="small" color={Colors.text} />
+              ) : (
+                // Render categories once fetched
+                <ContentContainer mainCatogery={mainCategory} />
+              )}
+
               <View style={{ backgroundColor: "F8F8F8", padding: 20 }}>
                 <CustomText
                   variant="h1"
@@ -151,7 +179,6 @@ const ProductDashboard: FC = () => {
                 </CustomText>
                 <CustomText
                   variant="h8"
-                  // fontSize={RFValue(32)}
                   fontFamily={Fonts.Bold}
                   style={{ opacity: 0.2, marginTop: 10, paddingBottom: 100 }}
                 >
@@ -188,5 +215,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withLiveStatus( withCart(withCollapsibleContext(ProductDashboard)));
-// export default ProductDashboard;
+export default withLiveStatus(
+  withCart(withCollapsibleContext(ProductDashboard))
+);

@@ -15,6 +15,27 @@ export const getAllCategories = async () => {
     return [];
   }
 };
+export const getCategoriesById = async (catogeryid: any) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/getcatagoryByuSubCategory/${catogeryid}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error, "getCategoriesById");
+    return [];
+  }
+};
+export const getAllMainCategories = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getAllMainCatagories`);
+
+    return response.data;
+  } catch (error) {
+    console.log(error, "getAllCategories");
+    return [];
+  }
+};
 
 export const getProductByCategoryId = async (categoryId: any) => {
   try {

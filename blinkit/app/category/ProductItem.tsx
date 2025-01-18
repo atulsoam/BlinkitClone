@@ -7,8 +7,8 @@ import { RFValue } from "react-native-responsive-fontsize";
 import UniversalAdd from "../../components/ui/universalAdd";
 
 const ProductItem: FC<{ item: any; index: number }> = ({ item, index }) => {
-    // console.log(item,10);
-    
+  // console.log(item,10);
+
   const isSecondColumn = index % 2 !== 0;
   return (
     <View style={[styles.container, { marginRight: isSecondColumn ? 10 : 0 }]}>
@@ -44,14 +44,14 @@ const ProductItem: FC<{ item: any; index: number }> = ({ item, index }) => {
               fontFamily={Fonts.Medium}
               //   style={{ color: Colors.primary }}
             >
-              $ {item?.price}
+              ₹ {item?.price}
             </CustomText>
             <CustomText
               variant="h8"
               fontFamily={Fonts.Medium}
               style={{ opacity: 0.8, textDecorationLine: "line-through" }}
             >
-              $ {item?.discountPrice}
+              ₹{item?.discountPrice}
             </CustomText>
           </View>
           <UniversalAdd item={item} />

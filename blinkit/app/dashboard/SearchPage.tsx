@@ -140,14 +140,14 @@ const SearchPage: React.FC = () => {
                 fontFamily={Fonts.Medium}
                 // style={{ color: Colors.primary }}
               >
-                $ {item?.price}
+                ₹ {item?.price}
               </CustomText>
               <CustomText
                 variant="h8"
                 fontFamily={Fonts.Medium}
                 style={{ opacity: 0.8, textDecorationLine: "line-through" }}
               >
-                $ {item?.discountPrice}
+                ₹ {item?.discountPrice}
               </CustomText>
             </View>
             <UniversalAdd item={item} />

@@ -5,11 +5,13 @@ import { Colors } from "@/utils/Constants";
 import SideBar from "./category/SideBar";
 import {
   getAllCategories,
+  getCategoriesById,
   getProductByCategoryId,
 } from "@/services/ProductService";
 import ProductList from "./category/ProductList";
 import withCart from "./cart/WithCart";
 import withLiveStatus from "./map/WithLiveStatus";
+import { useSearchParams } from "expo-router/build/hooks";
 // import { categories } from '../utils/dummyData';
 
 const ProductCategories: FC = () => {
@@ -19,13 +21,27 @@ const ProductCategories: FC = () => {
   const [categoriesLoading, setCategoriesLoading] = useState<boolean>(true);
   const [productsLoading, setProductsLoading] = useState<boolean>(false);
 
+  const searchParams = useSearchParams();
+  const item = searchParams.get("catagoryId");
+
   const FetchCategories = async () => {
+    console.log(item, "catogeryid");
+
     setCategoriesLoading(true);
     try {
-      const data = await getAllCategories();
+      const data = await getCategoriesById(item);
       setCategories(data);
       if (data && data.length > 0) {
-        setSelectedCategory(data[0]);
+        // Find the category that matches the item (categoryId)
+        const selectedCategory = data.find(
+          (category: any) => category._id.toString() === item
+        );
+        if (selectedCategory) {
+          setSelectedCategory(selectedCategory);
+        } else {
+          // Optionally handle the case where no matching category is found
+          console.log("No matching category found");
+        }
       }
     } catch (error) {
       console.log(error);
